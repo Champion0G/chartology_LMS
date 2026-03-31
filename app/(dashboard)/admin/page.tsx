@@ -244,10 +244,10 @@ function CreateTeacherModal({ onClose, onCreated }: { onClose: () => void; onCre
         .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
         .close-btn:hover { background: var(--danger-dim); color: var(--danger); border-color: rgba(239,68,68,0.2); }
         
-        .modal-form { display: flex; flexDirection: column; gap: 20px; }
+        .modal-form { display: flex; flex-direction: column; gap: 20px; }
         .error-alert { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 12px 16px; font-size: 13px; font-weight: 500; }
         .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .mobile-input { height: 48px; border-radius: 12px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); }
+        .mobile-input { height: 48px; border-radius: 12px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); width: 100%; }
         
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 4px; }
         .mobile-btn { padding: 12px 20px; font-size: 14px; border-radius: 12px; font-weight: 600; }
