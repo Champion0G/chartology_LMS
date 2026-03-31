@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum DoubtStatus {
+  OPEN
+  RESOLVED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  level     Int      @default(1)
+  xp        Int      @default(0)
+  createdAt DateTime @default(now())
+
+  submissions   Submission[]
+  doubts        Doubt[]
+  assignments   Assignment[]   @relation("CreatedAssignments")
+  notifications Notification[]
+}
+
+model Assignment {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  fileUrl     String?
+  fileName    String?
+  deadline    DateTime
+  createdBy   String
+  teacher     User     @relation("CreatedAssignments", fields: [createdBy], references: [id])
+  createdAt   DateTime @default(now())
+
+  submissions Submission[]
+}
+
+model Submission {
+  id           String     @id @default(uuid())
+  studentId    String
+  assignmentId String
+  fileUrl      String
+  fileName     String     @default("")
+  submittedAt  DateTime   @default(now())
+  isLate       Boolean    @default(false)
+  grade        Int?
+  feedback     String?
+
+  student    User       @relation(fields: [studentId], references: [id])
+  assignment Assignment @relation(fields: [assignmentId], references: [id])
+}
+
+model Doubt {
+  id        String      @id @default(uuid())
+  studentId String
+  question  String
+  reply     String?
+  status    DoubtStatus @default(OPEN)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  student User @relation(fields: [studentId], references: [id])
+}
+
+model Resource {
+  id          String   @id @default(uuid())
+  title       String
+  videoUrl    String
+  description String   @default("")
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
