@@ -46,51 +46,84 @@ export default function AdminPage() {
           </div>
           <p className="page-sub">{users.length} total users</p>
         </div>
-        <button className="btn-primary create-btn" onClick={() => setShowCreate(true)} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Plus size={16} /> Create Teacher Account
+        <button className="btn-primary create-btn" onClick={() => setShowCreate(true)}>
+          <Plus size={16} /> Create Teacher
         </button>
       </div>
 
-      <div className="glass-card" style={{ overflow: 'hidden' }}>
-        <div className="table-container">
-          <table className="users-table">
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Role</th>
-                <th>Level / XP</th>
-                <th>Joined</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map(u => (
-                <tr key={u.id}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                        {u.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2)}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 500 }}>{u.name}</div>
-                        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{u.email}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`badge ${u.role === 'TEACHER' ? 'badge-blue' : u.role === 'ADMIN' ? 'badge-purple' : 'badge-success'}`}>
-                      {u.role.toLowerCase()}
-                    </span>
-                  </td>
-                  <td style={{ fontSize: 13 }}>
-                    {u.role === 'STUDENT' ? `Lv.${u.level} · ${u.xp} XP` : '—'}
-                  </td>
-                  <td style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-                    {new Date(u.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </td>
+      <div className="admin-content">
+        {/* Desktop Table View */}
+        <div className="glass-card table-card">
+          <div className="table-container">
+            <table className="users-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Level / XP</th>
+                  <th>Joined</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {users.map(u => (
+                  <tr key={u.id}>
+                    <td>
+                      <div className="user-cell">
+                        <div className="user-avatar-small">
+                          {u.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2)}
+                        </div>
+                        <div>
+                          <div className="user-name-text">{u.name}</div>
+                          <div className="user-email-text">{u.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`badge ${u.role === 'TEACHER' ? 'badge-blue' : u.role === 'ADMIN' ? 'badge-purple' : 'badge-success'}`}>
+                        {u.role.toLowerCase()}
+                      </span>
+                    </td>
+                    <td className="level-cell">
+                      {u.role === 'STUDENT' ? `Lv.${u.level} · ${u.xp} XP` : '—'}
+                    </td>
+                    <td className="date-cell">
+                      {new Date(u.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="mobile-user-list">
+          {users.map(u => (
+            <div key={u.id} className="glass-card user-mobile-card">
+              <div className="user-mobile-header">
+                <div className="user-avatar-small">
+                  {u.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2)}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div className="user-name-text">{u.name}</div>
+                  <div className="user-email-text">{u.email}</div>
+                </div>
+                <span className={`badge ${u.role === 'TEACHER' ? 'badge-blue' : u.role === 'ADMIN' ? 'badge-purple' : 'badge-success'}`}>
+                  {u.role.toLowerCase()}
+                </span>
+              </div>
+              <div className="user-mobile-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Progress</span>
+                  <span className="stat-value">{u.role === 'STUDENT' ? `Level ${u.level} · ${u.xp} XP` : 'N/A'}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Joined</span>
+                  <span className="stat-value">{new Date(u.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -100,17 +133,36 @@ export default function AdminPage() {
         .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
         .page-title { font-size: 26px; font-weight: 700; }
         .page-sub { color: var(--text-muted); font-size: 14px; }
-        .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .users-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        .users-table th { padding: 12px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted); text-align: left; border-bottom: 1px solid var(--border); }
-        .users-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); }
-        .users-table tr:last-child td { border-bottom: none; }
-        .users-table tr:hover td { background: var(--bg-card); }
-
+        
+        .table-container { width: 100%; overflow-x: auto; }
+        .users-table { width: 100%; border-collapse: collapse; }
+        .users-table th { padding: 16px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted); text-align: left; border-bottom: 1px solid var(--border); }
+        .users-table td { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        
+        .user-cell { display: flex; align-items: center; gap: 12px; }
+        .user-avatar-small { width: 32px; height: 32px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
+        .user-name-text { font-size: 14px; font-weight: 600; color: #fff; }
+        .user-email-text { font-size: 12px; color: var(--text-muted); }
+        
+        .create-btn { display: flex; align-items: center; gap: 8px; padding: 10px 18px; font-size: 14px; }
+        
+        .mobile-user-list { display: none; flex-direction: column; gap: 12px; }
+        
         @media (max-width: 768px) {
-          .admin-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-          .create-btn { width: 100%; justify-content: center; padding: 14px; }
+          .admin-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+          .create-btn { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
           .admin-title-section { width: 100%; }
+          .page-title { font-size: 22px; }
+          
+          .table-card { display: none; }
+          .mobile-user-list { display: flex; }
+          
+          .user-mobile-card { padding: 16px; }
+          .user-mobile-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+          .user-mobile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+          .stat-item { display: flex; flex-direction: column; gap: 4px; }
+          .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+          .stat-value { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
         }
       `}</style>
     </div>
@@ -145,31 +197,67 @@ function CreateTeacherModal({ onClose, onCreated }: { onClose: () => void; onCre
 
   return (
     <div className="modal-overlay">
-      <div className="modal glass-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <h2 style={{ fontSize: 18 }}>Create Teacher Account</h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+      <div className="modal glass-card modal-fade-in">
+        <div className="modal-header">
+          <div>
+            <h2 className="modal-title">Create Teacher</h2>
+            <p className="modal-subtitle">Register a new instructor account</p>
+          </div>
+          <button className="close-btn" onClick={onClose}><X size={20} /></button>
         </div>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {error && <div style={{ background: 'var(--danger-dim)', color: 'var(--danger)', borderRadius: 8, padding: '8px 12px', fontSize: 13 }}>{error}</div>}
-          <div><label className="label">Full Name</label><input className="input" value={name} onChange={e => setName(e.target.value)} required /></div>
-          <div><label className="label">Email</label><input className="input" type="email" value={email} onChange={e => setEmail(e.target.value)} required /></div>
-          <div><label className="label">Password</label><input className="input" type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} /></div>
+        
+        <form onSubmit={handleSubmit} className="modal-form">
+          {error && <div className="error-alert">{error}</div>}
+          
+          <div className="form-group">
+            <label className="label">Full Name</label>
+            <input className="input mobile-input" placeholder="e.g. John Doe" value={name} onChange={e => setName(e.target.value)} required />
+          </div>
+          
+          <div className="form-group">
+            <label className="label">Email Address</label>
+            <input className="input mobile-input" type="email" placeholder="john@csol.in" value={email} onChange={e => setEmail(e.target.value)} required />
+          </div>
+          
+          <div className="form-group">
+            <label className="label">Access Password</label>
+            <input className="input mobile-input" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} />
+          </div>
+          
           <div className="modal-actions">
-            <button type="button" className="btn-secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn-primary" disabled={loading}>{loading ? 'Creating...' : 'Create Teacher'}</button>
+            <button type="button" className="btn-secondary mobile-btn" onClick={onClose}>Cancel</button>
+            <button type="submit" className="btn-primary mobile-btn highlight-btn" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Account'}
+            </button>
           </div>
         </form>
       </div>
       <style jsx>{`
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(8px); padding: 16px; }
-        .modal { width: 100%; max-width: 480px; padding: 28px; height: auto; max-height: 100dvh; overflow-y: auto; }
-        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(5, 5, 15, 0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(12px); padding: 20px; }
+        .modal { width: 100%; max-width: 440px; padding: 32px; border: 1px solid rgba(255,255,255,0.08); }
+        .modal-fade-in { animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
+        .modal-title { font-size: 20px; font-weight: 700; color: #fff; }
+        .modal-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+        .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .close-btn:hover { background: var(--danger-dim); color: var(--danger); border-color: rgba(239,68,68,0.2); }
+        
+        .modal-form { display: flex; flexDirection: column; gap: 20px; }
+        .error-alert { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 12px 16px; font-size: 13px; font-weight: 500; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .mobile-input { height: 48px; border-radius: 12px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); }
+        
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 4px; }
+        .mobile-btn { padding: 12px 20px; font-size: 14px; border-radius: 12px; font-weight: 600; }
+        .highlight-btn { flex: 1; box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3); }
+
         @media (max-width: 480px) {
-          .modal { padding: 20px; }
-          .modal-actions { flex-direction: column-reverse; }
-          .modal-actions button { width: 100%; }
+          .modal { padding: 24px; border-radius: 20px; }
+          .modal-actions { flex-direction: column-reverse; gap: 8px; }
+          .mobile-btn { width: 100%; padding: 14px; }
+          .modal-overlay { padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0)); }
         }
       `}</style>
     </div>
