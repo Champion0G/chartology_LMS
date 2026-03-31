@@ -357,14 +357,17 @@ export default function Sidebar({ user }: SidebarProps) {
             position: fixed;
             top: 0; left: 0; right: 0;
             height: 64px;
+            padding-top: env(safe-area-inset-top, 0);
+            box-sizing: content-box;
             background: rgba(8, 8, 15, 0.8);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            z-index: 40;
+            z-index: 100;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            padding-left: 16px;
+            padding-right: 16px;
             transition: transform 0.3s ease;
           }
 
@@ -391,21 +394,24 @@ export default function Sidebar({ user }: SidebarProps) {
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.6);
-            z-index: 45;
+            z-index: 145;
             backdrop-filter: blur(4px);
           }
 
           .sidebar {
             transform: translateX(-100%);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 50;
+            z-index: 150;
             width: 280px;
             box-shadow: none;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(10, 10, 20, 0.98);
           }
 
           .sidebar.open {
             transform: translateX(0);
-            box-shadow: 20px 0 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.8);
           }
           
           /* Hide desktop logo in mobile sidebar since it's on the top header now */
@@ -413,7 +419,17 @@ export default function Sidebar({ user }: SidebarProps) {
             display: none;
           }
           .sidebar-nav {
-            margin-top: 24px;
+            margin-top: calc(84px + env(safe-area-inset-top, 0));
+          }
+
+          .sidebar-user {
+            padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0));
+            background: rgba(0, 0, 0, 0.3);
+          }
+          
+          .logout-btn {
+            width: 44px;
+            height: 44px;
           }
         }
       `}</style>

@@ -5,13 +5,24 @@ import { useEffect, useState } from 'react'
 export default function InteractiveCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    // Check if device is mobile
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia('(max-width: 768px)').matches)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
     const updatePosition = (e: MouseEvent) => {
+      if (isMobile) return
       setPosition({ x: e.clientX, y: e.clientY })
     }
 
     const handleMouseOver = (e: MouseEvent) => {
+      if (isMobile) return
       const target = e.target as HTMLElement
       // Detect if we are hovering over clickable elements
       if (
@@ -31,10 +42,19 @@ export default function InteractiveCursor() {
     window.addEventListener('mouseover', handleMouseOver)
 
     return () => {
+      window.removeEventListener('resize', checkMobile)
       window.removeEventListener('mousemove', updatePosition)
       window.removeEventListener('mouseover', handleMouseOver)
     }
-  }, [])
+  }, [isMobile])
+
+  if (isMobile) return (
+    <style jsx global>{`
+      body, a, button, input, textarea, [role="button"] {
+        cursor: auto !important;
+      }
+    `}</style>
+  )
 
   return (
     <>
@@ -55,8 +75,15 @@ export default function InteractiveCursor() {
       />
       <style jsx global>{`
         /* Hide default body cursor but keep interactivity */
-        body {
-          cursor: none !important;
+        @media (hover: hover) and (pointer: fine) {
+          body {
+            cursor: none !important;
+          }
+          
+          /* Fallback for components holding manual cursors */
+          a, button, input, textarea, [role="button"] {
+            cursor: none !important;
+          }
         }
 
         .cursor-glow {
@@ -96,11 +123,6 @@ export default function InteractiveCursor() {
           background: transparent;
           border: 2px solid var(--accent-blue);
           box-shadow: 0 0 15px var(--accent-blue);
-        }
-
-        /* Fallback for components holding manual cursors */
-        a, button, input, textarea {
-          cursor: none !important;
         }
       `}</style>
     </>
