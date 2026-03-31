@@ -407,6 +407,8 @@ export default function Sidebar({ user }: SidebarProps) {
             height: 100vh;
             height: 100dvh;
             background: rgba(10, 10, 20, 0.98);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
           }
 
           .sidebar.open {
@@ -420,11 +422,13 @@ export default function Sidebar({ user }: SidebarProps) {
           }
           .sidebar-nav {
             margin-top: calc(84px + env(safe-area-inset-top, 0));
+            flex: none; /* Allow it to not push user section to the absolute bottom if we want it higher */
           }
 
           .sidebar-user {
-            padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0));
-            background: rgba(0, 0, 0, 0.3);
+            padding: 24px 24px calc(100px + env(safe-area-inset-bottom, 0));
+            background: rgba(0, 0, 0, 0.5);
+            margin-top: 40px;
           }
           
           .logout-btn {
