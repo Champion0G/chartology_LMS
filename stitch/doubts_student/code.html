@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed": "#e2dfff",
+            "surface-dim": "#d8dadc",
+            "inverse-primary": "#b4c5ff",
+            "on-secondary": "#ffffff",
+            "primary-container": "#00174b",
+            "on-tertiary-fixed": "#0f0069",
+            "inverse-surface": "#2d3133",
+            "surface": "#f7f9fb",
+            "primary-fixed-dim": "#b4c5ff",
+            "on-background": "#191c1e",
+            "on-primary-fixed-variant": "#003ea8",
+            "surface-variant": "#e0e3e5",
+            "tertiary": "#000000",
+            "surface-container-lowest": "#ffffff",
+            "primary": "#000000",
+            "secondary": "#006a61",
+            "background": "#f7f9fb",
+            "on-tertiary-container": "#7671ff",
+            "on-surface-variant": "#45464d",
+            "on-surface": "#191c1e",
+            "on-primary-fixed": "#00174b",
+            "on-error": "#ffffff",
+            "surface-bright": "#f7f9fb",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "on-tertiary-fixed-variant": "#3323cc",
+            "surface-container-low": "#f2f4f6",
+            "inverse-on-surface": "#eff1f3",
+            "on-secondary-container": "#006f66",
+            "secondary-fixed": "#89f5e7",
+            "primary-fixed": "#dbe1ff",
+            "on-secondary-fixed": "#00201d",
+            "secondary-container": "#86f2e4",
+            "error-container": "#ffdad6",
+            "tertiary-container": "#0f0069",
+            "surface-tint": "#0053db",
+            "on-primary-container": "#497cff",
+            "on-error-container": "#93000a",
+            "surface-container": "#eceef0",
+            "on-secondary-fixed-variant": "#005049",
+            "surface-container-highest": "#e0e3e5",
+            "surface-container-high": "#e6e8ea",
+            "secondary-fixed-dim": "#6bd8cb",
+            "tertiary-fixed-dim": "#c3c0ff",
+            "outline-variant": "#c6c6cd",
+            "outline": "#76777d",
+            "on-tertiary": "#ffffff"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+  </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-100 dark:bg-slate-900 border-none flex flex-col p-4 gap-2 font-['Inter'] text-sm font-medium">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-tint flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+</div>
+<div>
+<h1 class="text-lg font-extrabold font-['Manrope'] text-slate-900 dark:text-slate-50 leading-tight">Curator LMS</h1>
+<p class="text-[10px] text-slate-500 font-medium tracking-wider">DIGITAL LEARNING HUB</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span>Assignments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">video_library</span>
+<span>Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-xl shadow-sm font-semibold translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span>Q&amp;A Forum</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen pb-12">
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-lg flex justify-between items-center h-16 px-8 shadow-sm font-['Manrope'] tracking-tight">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-bold text-slate-900 dark:text-slate-50">Doubt Management</h2>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-bold rounded-full">4 ACTIVE DOUBTS</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">help_outline</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-slate-200 overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Close up portrait of a young man with glasses and a friendly expression in a brightly lit studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQGvHzeFmCOZlz2nRn2CPyx1oVyOAlAyaNYhq_hOB7AM067kbxsna2v8ss80QTKG32F8lFB_G89HWSp1-a3tV0vIU-8HrHiEOp0y7NrB3zixjT3Z1mXRIjNGzuaZ59KCjL0u4RGWslb3N47UCB4vc49Ue65p-0F5BphOWKCQ-VBVO9We2-51dtnLdI7qIr2lU4kCodaTgjpic4dgBVJ7jUTlnGDqDTeUpiOjgGdG7oPAOkcUDPViEAjQ3DKZhTMeM_9Ap1CUoZYMVP"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<section class="mt-24 px-12 max-w-7xl mx-auto">
+<!-- Action Header -->
+<div class="flex justify-between items-end mb-10">
+<div class="space-y-2">
+<h3 class="text-3xl font-extrabold text-on-surface">Curated Queries</h3>
+<p class="text-on-surface-variant max-w-md">Track your academic questions and receive structured feedback from your instructors.</p>
+</div>
+<button class="group relative flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-on-primary-container to-surface-tint text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+<span>New Doubt</span>
+</button>
+</div>
+<!-- Doubt List Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- List Sidebar -->
+<div class="lg:col-span-5 space-y-4">
+<div class="flex items-center justify-between px-2 mb-4">
+<span class="text-xs font-bold text-on-surface-variant tracking-widest uppercase">Your Submissions</span>
+<span class="text-xs text-on-primary-fixed-variant cursor-pointer hover:underline">Filter By Status</span>
+</div>
+<!-- Active Doubt Card -->
+<div class="p-6 bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-surface-tint ring-1 ring-black/5 hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container text-on-secondary-container uppercase tracking-wider">Resolved</span>
+<span class="text-[11px] text-on-surface-variant font-medium italic">2 hours ago</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface mb-2 leading-snug">Complex Fourier Transform in Signal Processing</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2 leading-relaxed">I'm struggling to understand the integration limits when dealing with periodic pulses in the time domain...</p>
+</div>
+<!-- Pending Doubt Card -->
+<div class="p-6 bg-surface-container-low rounded-xl ring-1 ring-black/5 hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant uppercase tracking-wider">Pending</span>
+<span class="text-[11px] text-on-surface-variant font-medium italic">Yesterday</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface mb-2 leading-snug">Quantum Entanglement Basics</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2 leading-relaxed">How do we mathematically represent the state of two entangled qubits before measurement occurs?</p>
+</div>
+<!-- Another Pending -->
+<div class="p-6 bg-surface-container-low rounded-xl ring-1 ring-black/5 hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant uppercase tracking-wider">Pending</span>
+<span class="text-[11px] text-on-surface-variant font-medium italic">3 days ago</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface mb-2 leading-snug">Database Normalization: 3NF vs BCNF</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2 leading-relaxed">I have a specific schema where a non-prime attribute is dependent on part of a composite key...</p>
+</div>
+</div>
+<!-- Detail View (The "Editorial" Look) -->
+<div class="lg:col-span-7">
+<div class="sticky top-24 bg-surface-container-lowest rounded-2xl p-10 ring-1 ring-black/5 shadow-xl shadow-slate-200/50">
+<!-- Doubt Header -->
+<div class="border-b border-surface-variant pb-8 mb-8">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-surface-tint">psychology</span>
+<span class="text-xs font-bold text-surface-tint tracking-widest uppercase">Signal Processing • Module 4</span>
+</div>
+<h2 class="text-3xl font-extrabold text-on-surface leading-tight mb-4">Complex Fourier Transform in Signal Processing</h2>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">person</span>
+</div>
+<span class="text-sm font-medium text-on-surface">Submitted by You</span>
+<span class="text-on-surface-variant text-sm">•</span>
+<span class="text-sm text-on-surface-variant italic">Oct 24, 2023 at 10:45 AM</span>
+</div>
+</div>
+<!-- Student Question -->
+<div class="mb-10 pl-4 border-l-2 border-surface-variant">
+<p class="text-on-surface leading-relaxed text-lg">
+                I'm struggling to understand the integration limits when dealing with periodic pulses in the time domain. Specifically, in Example 4.2, why do we integrate from -T/2 to T/2 instead of 0 to T? Does the choice of origin affect the final phase component of the frequency spectrum?
+              </p>
+<div class="mt-6 flex gap-4">
+<div class="bg-surface-container-low p-3 rounded-xl flex items-center gap-3 border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface-variant">attachment</span>
+<span class="text-xs font-semibold text-on-surface-variant">equation_screenshot.png</span>
+</div>
+</div>
+</div>
+<!-- Instructor Reply (The Focused Card) -->
+<div class="bg-primary-container p-8 rounded-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 opacity-10">
+<span class="material-symbols-outlined text-9xl -mr-8 -mt-8" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+</div>
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-full overflow-hidden ring-2 ring-on-primary-container">
+<img alt="Instructor Avatar" class="w-full h-full object-cover" data-alt="Mid-adult professor with a thoughtful look wearing a blazer, blurred library background, warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1a-cCOCRXzl6_GGxxlmxTsXNS-am9C5n3AkL3dUvRSt9EloqsSvuJLiYU1Wlmd9YuagmyZpVk4Nd6J2nbhAXnHTsi9OmZzQTpoo9kcPpiclV-7LtHuILKzy_1D260sruJ3Enry76yeO1sIQA_yGgyOU_7I-HPIo_hHIyBlgptdebPeZNQSYFPPe4fgxuW_uI0jJ1W0mdV2v9XqfQ2Uv1Coj6Kqtve_5TKR097naXXso9XS2qyzSE-Y15b7KiVGE667AXDjWBf5a6B"/>
+</div>
+<div>
+<h5 class="text-on-primary font-bold">Dr. Alistair Vance</h5>
+<p class="text-on-primary-container text-xs font-semibold">Professor of Electrical Engineering</p>
+</div>
+</div>
+<div class="space-y-4">
+<p class="text-white/90 leading-relaxed italic">
+                  "Great observation! The choice of integration limits (-T/2 to T/2) is primarily for mathematical symmetry. When the signal is even-symmetric around the origin, it simplifies the complex exponential into a pure cosine term, which makes the computation much cleaner."
+                </p>
+<p class="text-white/90 leading-relaxed italic">
+                  "If you use 0 to T, the magnitude spectrum remains identical, but as you suspected, you will get a linear phase shift term in your results. Check the 'Time Shifting Property' in Section 4.5 for the formal proof."
+                </p>
+</div>
+<div class="mt-8 pt-6 border-t border-white/10 flex justify-between items-center">
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-lg transition-colors">Helpful (12)</button>
+<button class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-lg transition-colors">Request Clarification</button>
+</div>
+<span class="text-[10px] text-white/50 uppercase font-bold tracking-widest">REPLIED 2H AGO</span>
+</div>
+</div>
+<!-- Footer Reply Form (Minimalist) -->
+<div class="mt-8 pt-8">
+<div class="flex items-center gap-4 group">
+<div class="flex-1 bg-surface-container-low rounded-xl px-5 py-4 text-on-surface-variant text-sm font-medium border-l-2 border-transparent group-hover:border-surface-tint group-focus-within:bg-white transition-all">
+                  Click here to type a follow-up question...
+                </div>
+<button class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-surface-tint transition-colors">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Focus Mode FAB (Contextual) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-on-background text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-50">
+<span class="material-symbols-outlined">center_focus_strong</span>
+</button>
+</body></html>

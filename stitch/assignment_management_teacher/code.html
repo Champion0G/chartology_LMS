@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curator LMS - Assignment Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#e2dfff",
+              "surface-dim": "#d8dadc",
+              "inverse-primary": "#b4c5ff",
+              "on-secondary": "#ffffff",
+              "primary-container": "#00174b",
+              "on-tertiary-fixed": "#0f0069",
+              "inverse-surface": "#2d3133",
+              "surface": "#f7f9fb",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-background": "#191c1e",
+              "on-primary-fixed-variant": "#003ea8",
+              "surface-variant": "#e0e3e5",
+              "tertiary": "#000000",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#000000",
+              "secondary": "#006a61",
+              "background": "#f7f9fb",
+              "on-tertiary-container": "#7671ff",
+              "on-surface-variant": "#45464d",
+              "on-surface": "#191c1e",
+              "on-primary-fixed": "#00174b",
+              "on-error": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "surface-container-low": "#f2f4f6",
+              "inverse-on-surface": "#eff1f3",
+              "on-secondary-container": "#006f66",
+              "secondary-fixed": "#89f5e7",
+              "primary-fixed": "#dbe1ff",
+              "on-secondary-fixed": "#00201d",
+              "secondary-container": "#86f2e4",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#0f0069",
+              "surface-tint": "#0053db",
+              "on-primary-container": "#497cff",
+              "on-error-container": "#93000a",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed-variant": "#005049",
+              "surface-container-highest": "#e0e3e5",
+              "surface-container-high": "#e6e8ea",
+              "secondary-fixed-dim": "#6bd8cb",
+              "tertiary-fixed-dim": "#c3c0ff",
+              "outline-variant": "#c6c6cd",
+              "outline": "#76777d",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-header {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .asymmetric-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 2rem;
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-100 dark:bg-slate-900 flex flex-col p-4 gap-2 border-none">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-lg bg-surface-tint flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="school">school</span>
+</div>
+<h1 class="text-lg font-extrabold font-headline text-slate-900 dark:text-slate-50">Curator LMS</h1>
+</div>
+<p class="text-xs text-slate-500 font-medium">Digital Learning Hub</p>
+</div>
+<div class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-xl shadow-sm font-semibold translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-medium">Assignments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+<span class="font-medium">Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-medium">Q&amp;A Forum</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</div>
+<button class="mb-4 mx-2 bg-gradient-to-br from-on-primary-container to-surface-tint text-white py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-bold shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+            Create New
+        </button>
+<div class="mt-auto border-t border-slate-200 dark:border-slate-800 pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-medium">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium">Logout</span>
+</a>
+</div>
+</nav>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-full z-40 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-lg ml-64 h-16 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center h-full px-6 ml-64">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-surface-tint/20 transition-all outline-none" placeholder="Search assignments or students..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden ml-2 bg-slate-200">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional man with a friendly expression in a brightly lit studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCejnj0SB4_LhDIIdsTARrRh3Xnmel1GRUbeA6hJkM9AIKf6WM5rFQpGMxkNW1vzcUrfivjJG17nrL6F7mDzUPoy8rtTR2tG_b5vlc2hC-GIh4SuZcUWwL1MJ7J25DlTbLxlM-pZOPytlVL2JfZ9jQS121Pjz9v5Eeg_caDIc9rqCg72EdtZsExz1PY0nbBwpIuT7nJVPdYx81N-LKTCgnO4P2bffAIt_wkNDaYiLSbLiQbHn5XOzi6rJFqe6Ii5BUUHmKpkn4BxHtb"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pl-64 pr-8 pb-12">
+<div class="max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+<div class="max-w-2xl">
+<span class="text-xs font-bold tracking-widest text-surface-tint uppercase mb-2 block">Instructor Portal</span>
+<h2 class="text-4xl font-extrabold font-headline text-slate-900 tracking-tight">Assignment Management</h2>
+<p class="mt-4 text-slate-500 leading-relaxed">Design thoughtful assessments and review student submissions with high-precision feedback tools. Your current queue has 14 pending reviews.</p>
+</div>
+</div>
+<!-- Asymmetric Bento-style Layout -->
+<div class="asymmetric-grid">
+<!-- Left Column: Creation & Main Feed -->
+<div class="flex flex-col gap-8">
+<!-- Create Assignment Card (High Intent) -->
+<section class="bg-surface-container-lowest rounded-2xl p-8 shadow-sm">
+<div class="flex items-center gap-4 mb-8">
+<div class="p-3 bg-primary-fixed rounded-xl">
+<span class="material-symbols-outlined text-on-primary-fixed" data-icon="edit_note">edit_note</span>
+</div>
+<div>
+<h3 class="text-xl font-bold font-headline">Draft New Assignment</h3>
+<p class="text-sm text-slate-500">Define the scope and criteria for your students</p>
+</div>
+</div>
+<form class="space-y-6">
+<div class="grid grid-cols-2 gap-6">
+<div class="col-span-2">
+<label class="block text-xs font-bold text-slate-400 uppercase mb-2 ml-1">Title</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-surface-tint/10 transition-all outline-none text-slate-900" placeholder="e.g., Comparative Analysis of Modernist Poetry" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block text-xs font-bold text-slate-400 uppercase mb-2 ml-1">Deadline</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="calendar_today">calendar_today</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-3 focus:bg-white focus:ring-2 focus:ring-surface-tint/10 transition-all outline-none" placeholder="Oct 24, 2023" type="text"/>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block text-xs font-bold text-slate-400 uppercase mb-2 ml-1">Max Grade</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-surface-tint/10 transition-all outline-none" placeholder="100" type="number"/>
+</div>
+<div class="col-span-2">
+<label class="block text-xs font-bold text-slate-400 uppercase mb-2 ml-1">Description &amp; Resources</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-surface-tint/10 transition-all outline-none resize-none" placeholder="Outline the learning objectives and attach required readings..." rows="4"></textarea>
+</div>
+</div>
+<div class="flex justify-end gap-4 pt-2">
+<button class="px-6 py-3 rounded-xl font-semibold text-slate-600 bg-surface-container-high hover:bg-slate-200 transition-all" type="button">Save Draft</button>
+<button class="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-br from-on-primary-container to-surface-tint shadow-lg shadow-blue-500/20 active:scale-95 transition-all" type="submit">Publish Assignment</button>
+</div>
+</form>
+</section>
+<!-- Pending Submissions List -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-2xl font-bold font-headline text-slate-900">Recent Submissions</h3>
+<button class="text-surface-tint text-sm font-bold flex items-center gap-1 hover:gap-2 transition-all">
+                                View Grading Queue <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Submission Item -->
+<div class="group bg-surface-container-lowest rounded-2xl p-4 flex items-center gap-6 transition-all hover:shadow-md hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-slate-200 flex-shrink-0">
+<img alt="Student" class="w-full h-full object-cover" data-alt="Portrait of a young woman with a warm smile wearing a blue sweater, clean white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOzirhW0QwiyGbFt6gEzd39EdU72H7hNX1NVLHnmcMREfTIsR_rDQLyo1KFxnhskxMcM6l7KEmHV_rLoW9_P0RjfUEWJ12jw6riighIR7eYMGT5_LGfGvIW8xWLYcfoGq5hKNgQfmlZK19lQ7ooBn_QdNK_z4Od7ZOYn_esPp1EeRjVSxofwFI_BVFO4TCwrhY_OMEZYe7HHW0gsHuEdzLYy_OWkWZujCyl23uI4JooyuAUr4D9Z1KPj_818Y-uSG1As5pPNmGbtdv"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<h4 class="font-bold text-slate-900">Elena Rodriguez</h4>
+<span class="text-xs px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full font-bold">New</span>
+</div>
+<p class="text-sm text-slate-500 truncate max-w-md">Final Project: The Architecture of Digital Ecosystems</p>
+</div>
+<div class="text-right px-4">
+<p class="text-xs text-slate-400 font-medium">Submitted 2h ago</p>
+<p class="text-xs font-bold text-slate-900">File: .PDF (4.2 MB)</p>
+</div>
+<button class="h-10 w-10 flex items-center justify-center rounded-xl bg-surface-container-high text-slate-600 group-hover:bg-surface-tint group-hover:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="grading">grading</span>
+</button>
+</div>
+<!-- Submission Item -->
+<div class="group bg-surface-container-lowest rounded-2xl p-4 flex items-center gap-6 transition-all hover:shadow-md hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-slate-200 flex-shrink-0">
+<img alt="Student" class="w-full h-full object-cover" data-alt="Close-up headshot of a young man with glasses and a thoughtful expression, outdoor natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiOFzD24iD2l7U_ep3FG24hRsZZgiGDDoIc56T7GsM7eMe4DfuqgEg0RQDIZYBvYycDrbs5ssTknySiliH0ElYUXW9b-JJmOvq2e-jf7ADa3AnvjA8Kr2kgrP5z5x9FJ1U93zWKLrKQY1s9aIzB8YZ1mU98TEeXvuUPJGHKPmiLWAdv_KCO3Qp_3qniOh1bj0XUA653eZclp9WK3XHlTbYYTzQKVKYunBBLwXpZ6LJe7QGimTUeyXIOvfA169Z0ysGKBcWntOPbo4a"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<h4 class="font-bold text-slate-900">Marcus Thorne</h4>
+<span class="text-xs px-2 py-0.5 bg-surface-container-high text-slate-500 rounded-full font-bold">In Progress</span>
+</div>
+<p class="text-sm text-slate-500 truncate max-w-md">Weekly Journal: Reflecting on Existentialism</p>
+</div>
+<div class="text-right px-4">
+<p class="text-xs text-slate-400 font-medium">Submitted 5h ago</p>
+<p class="text-xs font-bold text-slate-900">File: .DOCX (1.1 MB)</p>
+</div>
+<button class="h-10 w-10 flex items-center justify-center rounded-xl bg-surface-container-high text-slate-600 group-hover:bg-surface-tint group-hover:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="grading">grading</span>
+</button>
+</div>
+<!-- Submission Item -->
+<div class="group bg-surface-container-lowest rounded-2xl p-4 flex items-center gap-6 transition-all hover:shadow-md hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-slate-200 flex-shrink-0">
+<img alt="Student" class="w-full h-full object-cover" data-alt="Studio portrait of a young professional woman with curly hair, looking confidently into the camera, soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVn1YMCYludXs7D3bV2O9hnpsVCI65zUETOXWSImMsd5is6ZKP25drpxya6VsnlOf0GxmsTe4jKEWq05RpYrXewXSlGPGmb6tmq9XbIJGbJN1nucWCIycTCm4h2_U3oxq3DzSiXQF6ew_5wFDiBvCinp37owne5eWPgKDcmDi7y3_KKxEiyWI4dEdANtGCA9AaGvtQblu8Iv1erWEeA15iZ5VAw3BT9LsmuZmpbSSoSgKN8Vwc4NRTeVQgynaSvAWuEDEe4omV1dev"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<h4 class="font-bold text-slate-900">Sarah Jenkins</h4>
+<span class="text-xs px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full font-bold">Resubmitted</span>
+</div>
+<p class="text-sm text-slate-500 truncate max-w-md">Mid-term Assessment: Theoretical Physics Foundations</p>
+</div>
+<div class="text-right px-4">
+<p class="text-xs text-slate-400 font-medium">Submitted 1d ago</p>
+<p class="text-xs font-bold text-slate-900">File: .ZIP (12 MB)</p>
+</div>
+<button class="h-10 w-10 flex items-center justify-center rounded-xl bg-surface-container-high text-slate-600 group-hover:bg-surface-tint group-hover:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="grading">grading</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Stats & Context -->
+<div class="flex flex-col gap-6">
+<!-- Efficiency Metrics -->
+<div class="bg-primary-container text-white rounded-2xl p-6 shadow-xl overflow-hidden relative">
+<div class="relative z-10">
+<h4 class="text-sm font-bold uppercase tracking-widest opacity-60 mb-6">Efficiency Pulse</h4>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="text-2xl font-bold">84%</span>
+<span class="text-xs opacity-60">Avg. Grading Speed</span>
+</div>
+<div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[84%] rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="text-2xl font-bold">1.2d</span>
+<span class="text-xs opacity-60">Feedback Turnaround</span>
+</div>
+<div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-on-tertiary-container w-[60%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="bolt">bolt</span>
+</div>
+</div>
+<!-- Upcoming Deadlines Small List -->
+<div class="bg-surface-container-low rounded-2xl p-6">
+<h4 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-4">Upcoming Deadlines</h4>
+<div class="space-y-4">
+<div class="flex gap-4">
+<div class="h-10 w-1 font-bold bg-error rounded-full"></div>
+<div>
+<p class="text-sm font-bold text-slate-900 leading-tight">Poetry Analysis</p>
+<p class="text-xs text-slate-500">Tomorrow at 11:59 PM</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="h-10 w-1 font-bold bg-surface-tint rounded-full"></div>
+<div>
+<p class="text-sm font-bold text-slate-900 leading-tight">Modernist Essays</p>
+<p class="text-xs text-slate-500">In 3 days</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Editorial Aesthetic Quote/Note -->
+<div class="mt-4 p-8 border-l-2 border-slate-200 dark:border-slate-800 italic text-slate-400 font-headline text-lg leading-relaxed">
+                        "Education is not the filling of a pail, but the lighting of a fire."
+                        <span class="block mt-4 text-xs font-bold uppercase tracking-widest not-italic opacity-60">— W.B. Yeats</span>
+</div>
+<!-- Quick Insight Image -->
+<div class="rounded-2xl overflow-hidden relative group aspect-square">
+<img alt="Library" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Quiet historical library with tall mahogany bookshelves filled with old books and soft sunlight streaming through high windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyqNgZlpZDdzoPtQCprAGuRVg4ctbkVQL8ppFmyeKp9TsAH7zUyEllQ2cvzy8T_wA_58YrvjysgU3Kk4zi9B9sTj-9QHTWs72kMvWzVvsfpnWjdpmjlW5e9qE_8DHbXt6XzJyujmZLbOttcuJ13Fwod1M9P8tj_FTAafC2QNul2--jbg6m4N-LkMJxE6xykZrk2dLx0Tp0_FfLpkFq-44fp7BvUFn0D7egDq9OSGrYzRc1LN5VdfrH0y3IGHeOzSRAOoWQ7CcOSDug"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent flex flex-col justify-end p-6">
+<span class="text-[10px] font-bold text-white/60 uppercase tracking-widest mb-1">Curation Tip</span>
+<p class="text-white text-sm font-medium">Use the "Comparison View" to grade multiple students side-by-side for consistent rubric application.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB Suppression: Not rendered on focused management page as per Shell Rules -->
+</body></html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Curator LMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#e2dfff",
+              "surface-dim": "#d8dadc",
+              "inverse-primary": "#b4c5ff",
+              "on-secondary": "#ffffff",
+              "primary-container": "#00174b",
+              "on-tertiary-fixed": "#0f0069",
+              "inverse-surface": "#2d3133",
+              "surface": "#f7f9fb",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-background": "#191c1e",
+              "on-primary-fixed-variant": "#003ea8",
+              "surface-variant": "#e0e3e5",
+              "tertiary": "#000000",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#000000",
+              "secondary": "#006a61",
+              "background": "#f7f9fb",
+              "on-tertiary-container": "#7671ff",
+              "on-surface-variant": "#45464d",
+              "on-surface": "#191c1e",
+              "on-primary-fixed": "#00174b",
+              "on-error": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "surface-container-low": "#f2f4f6",
+              "inverse-on-surface": "#eff1f3",
+              "on-secondary-container": "#006f66",
+              "secondary-fixed": "#89f5e7",
+              "primary-fixed": "#dbe1ff",
+              "on-secondary-fixed": "#00201d",
+              "secondary-container": "#86f2e4",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#0f0069",
+              "surface-tint": "#0053db",
+              "on-primary-container": "#497cff",
+              "on-error-container": "#93000a",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed-variant": "#005049",
+              "surface-container-highest": "#e0e3e5",
+              "surface-container-high": "#e6e8ea",
+              "secondary-fixed-dim": "#6bd8cb",
+              "tertiary-fixed-dim": "#c3c0ff",
+              "outline-variant": "#c6c6cd",
+              "outline": "#76777d",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0 24px 48px -12px rgba(25, 28, 30, 0.06);
+        }
+        .action-gradient {
+            background: linear-gradient(45deg, #497cff 0%, #0053db 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-background min-h-screen flex items-center justify-center p-6 md:p-12">
+<!-- Auth Container -->
+<main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 bg-surface-container-lowest rounded-[2rem] overflow-hidden editorial-shadow">
+<!-- Left Column: Image/Brand Section -->
+<section class="hidden lg:flex flex-col justify-between p-12 bg-surface-container-low relative overflow-hidden">
+<!-- Branding -->
+<div class="z-10">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 bg-surface-tint rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+</div>
+<span class="font-headline font-extrabold text-2xl tracking-tight text-on-surface">Curator LMS</span>
+</div>
+<h1 class="font-headline text-4xl font-bold leading-tight mb-4 text-on-surface">
+                    Where knowledge finds its rhythm.
+                </h1>
+<p class="text-on-surface-variant text-lg max-w-sm leading-relaxed">
+                    A thoughtfully designed space for scholars and educators to engage with deep learning.
+                </p>
+</div>
+<!-- Illustration/Visual Asset -->
+<div class="relative mt-12 aspect-square z-10">
+<div class="absolute inset-0 bg-secondary-container/20 rounded-3xl backdrop-blur-sm -rotate-3"></div>
+<img alt="Education Platform" class="relative z-20 w-full h-full object-cover rounded-3xl shadow-xl rotate-3" data-alt="Minimalist modern workspace with clean desk, plant, and high-end digital tablet showing abstract educational graphics with soft morning lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBllWg6clyMSDs3QYqtIlNwbZMP6pf003mbDcQtqchGLuRV8b5ZmMMnyDfzKajzDTt6A6Zp0moAhHi3JXbj8KWbLpeM-gAcpQrCqank6qpch7G4EYj4wEAaJPOq0hTOOMnKel47JlxhU4GjJslNs4QUCNMbE1A8FDsFsbvRY7qKFhJ54FzDHxBJawlUBuo6V6TMqD9kdc2JDAW4Hl5BLTsU2ZYXYtAU1_X5WH1m-IT2fUJOMZoRY46FyZZdXOFXUN5oixBDTnNQJpPY"/>
+</div>
+<!-- Subtle background decorative elements -->
+<div class="absolute top-[-10%] right-[-10%] w-64 h-64 bg-primary-fixed-dim/30 rounded-full blur-3xl"></div>
+<div class="absolute bottom-[-5%] left-[-5%] w-48 h-48 bg-secondary-fixed/30 rounded-full blur-3xl"></div>
+</section>
+<!-- Right Column: Form Section -->
+<section class="p-8 md:p-16 flex flex-col justify-center">
+<div class="max-w-sm mx-auto w-full">
+<!-- Mobile Branding -->
+<div class="lg:hidden flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-surface-tint" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-headline font-bold text-xl text-on-surface">Curator LMS</span>
+</div>
+<div class="mb-10">
+<h2 class="font-headline text-3xl font-bold text-on-surface mb-2">Welcome back</h2>
+<p class="text-on-surface-variant text-sm">Please enter your details to access your hub.</p>
+</div>
+<!-- Role Selection -->
+<div class="grid grid-cols-2 gap-3 mb-8">
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-surface-tint bg-surface-container-lowest text-on-primary-fixed-variant font-semibold transition-all hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-lg">school</span>
+<span class="text-sm">Student</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-transparent bg-surface-container-low text-on-surface-variant font-medium transition-all hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+<span class="text-sm">Instructor</span>
+</button>
+</div>
+<form class="space-y-5">
+<div>
+<label class="block font-label text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2" for="email">Email Address</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3.5 text-on-surface placeholder:text-outline focus:ring-0 focus:bg-surface-container-lowest transition-all" id="email" name="email" placeholder="name@institution.edu" type="email"/>
+<div class="absolute left-0 bottom-0 h-0.5 w-0 bg-surface-tint transition-all group-focus-within:w-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<label class="block font-label text-xs font-semibold text-on-surface-variant uppercase tracking-wider" for="password">Password</label>
+<a class="text-xs font-semibold text-on-primary-fixed-variant hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative group">
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3.5 text-on-surface placeholder:text-outline focus:ring-0 focus:bg-surface-container-lowest transition-all" id="password" name="password" placeholder="••••••••" type="password"/>
+<div class="absolute left-0 bottom-0 h-0.5 w-0 bg-surface-tint transition-all group-focus-within:w-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-2">
+<input class="w-5 h-5 rounded border-outline-variant text-surface-tint focus:ring-surface-tint bg-surface-container-low" id="remember" type="checkbox"/>
+<label class="text-sm text-on-surface-variant font-medium select-none" for="remember">Remember for 30 days</label>
+</div>
+<button class="w-full action-gradient text-white font-headline font-bold py-4 rounded-xl shadow-lg shadow-surface-tint/20 transition-all hover:scale-[1.02] active:scale-[0.98] mt-4" type="submit">
+                        Sign In
+                    </button>
+</form>
+<div class="mt-8 flex items-center gap-4">
+<div class="h-[1px] flex-1 bg-outline-variant/30"></div>
+<span class="text-xs font-semibold text-outline uppercase tracking-widest">or continue with</span>
+<div class="h-[1px] flex-1 bg-outline-variant/30"></div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-8">
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-outline-variant/30 bg-surface-container-lowest hover:bg-surface-container-low transition-all">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+<span class="text-sm font-medium text-on-surface">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-outline-variant/30 bg-surface-container-lowest hover:bg-surface-container-low transition-all">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.341-3.369-1.341-.454-1.152-1.11-1.459-1.11-1.459-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.137 20.164 22 16.418 22 12c0-5.523-4.477-10-10-10z"></path>
+</svg>
+<span class="text-sm font-medium text-on-surface">GitHub</span>
+</button>
+</div>
+<div class="mt-10 text-center">
+<p class="text-sm text-on-surface-variant font-medium">
+                        Don't have an account? 
+                        <a class="text-on-primary-fixed-variant font-bold hover:underline" href="#">Start your journey</a>
+</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Background Decoration for the entire page -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none opacity-40">
+<div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-primary-fixed rounded-full blur-[120px]"></div>
+<div class="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-tertiary-fixed rounded-full blur-[120px]"></div>
+</div>
+</body></html>

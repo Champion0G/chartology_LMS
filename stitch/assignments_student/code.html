@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curator LMS - Assignments</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "tertiary-fixed": "#e2dfff",
+                "surface-dim": "#d8dadc",
+                "inverse-primary": "#b4c5ff",
+                "on-secondary": "#ffffff",
+                "primary-container": "#00174b",
+                "on-tertiary-fixed": "#0f0069",
+                "inverse-surface": "#2d3133",
+                "surface": "#f7f9fb",
+                "primary-fixed-dim": "#b4c5ff",
+                "on-background": "#191c1e",
+                "on-primary-fixed-variant": "#003ea8",
+                "surface-variant": "#e0e3e5",
+                "tertiary": "#000000",
+                "surface-container-lowest": "#ffffff",
+                "primary": "#000000",
+                "secondary": "#006a61",
+                "background": "#f7f9fb",
+                "on-tertiary-container": "#7671ff",
+                "on-surface-variant": "#45464d",
+                "on-surface": "#191c1e",
+                "on-primary-fixed": "#00174b",
+                "on-error": "#ffffff",
+                "surface-bright": "#f7f9fb",
+                "on-primary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-tertiary-fixed-variant": "#3323cc",
+                "surface-container-low": "#f2f4f6",
+                "inverse-on-surface": "#eff1f3",
+                "on-secondary-container": "#006f66",
+                "secondary-fixed": "#89f5e7",
+                "primary-fixed": "#dbe1ff",
+                "on-secondary-fixed": "#00201d",
+                "secondary-container": "#86f2e4",
+                "error-container": "#ffdad6",
+                "tertiary-container": "#0f0069",
+                "surface-tint": "#0053db",
+                "on-primary-container": "#497cff",
+                "on-error-container": "#93000a",
+                "surface-container": "#eceef0",
+                "on-secondary-fixed-variant": "#005049",
+                "surface-container-highest": "#e0e3e5",
+                "surface-container-high": "#e6e8ea",
+                "secondary-fixed-dim": "#6bd8cb",
+                "tertiary-fixed-dim": "#c3c0ff",
+                "outline-variant": "#c6c6cd",
+                "outline": "#76777d",
+                "on-tertiary": "#ffffff"
+              },
+              fontFamily: {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .main-cta-gradient {
+            background: linear-gradient(45deg, #497cff, #0053db);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- SideNavBar (Authority Source: JSON) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-100 dark:bg-slate-900 flex flex-col p-4 gap-2 border-none">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-xl overflow-hidden">
+<img alt="Institution Logo" class="w-full h-full object-cover" data-alt="A minimalist architectural abstract logo with sharp lines and blue tones against a white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfD_Udrsybfqr5qsZTWhySQ3cnFW8c6b7IuHijsbSuW7DUifmunHS4aldNm1dOBwqeosuif3COeZ7pRISmJFBEGNtGVwsnvurRu6Sl_6tIbu4-zs_KQJS2dFlrP44lfwaTWHK2vc-rSVYLets4E23WSO4WMWIvAmu-asjvIK9QdlA-l7Yk_LZZmy_HZg2kMowtA51tQKoIATxRlpPqK5cVvxmRlRO9DiwJK9P4bv3o9m2LxUnIC_5GqWfJcwL0MZg_rCnTtu0Ic_d3"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold font-headline text-slate-900 dark:text-slate-50 leading-tight">Curator LMS</h1>
+<p class="text-xs text-slate-500 font-label">Digital Learning Hub</p>
+</div>
+</div>
+<button class="w-full main-cta-gradient text-on-primary py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+                Create New
+            </button>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<!-- Active State Logic: Assignments is Active -->
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-xl shadow-sm font-semibold translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="assignment" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-medium">Assignments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+<span class="font-medium">Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-medium">Q&amp;A Forum</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="pt-4 mt-auto border-t border-slate-200 dark:border-slate-800 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-medium">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar (Authority Source: JSON) -->
+<header class="fixed top-0 right-0 w-full z-40 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-lg flex justify-between items-center h-16 px-6 ml-64 shadow-sm dark:shadow-none">
+<div class="flex items-center gap-6 flex-1 ml-64">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-surface-tint/20 transition-all outline-none" placeholder="Search assignments..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
+<div class="flex items-center gap-3 pl-2">
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Alex Rivers</span>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-slate-200" data-alt="Portrait of a young man with a friendly expression in soft natural lighting against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2gOL49VQ3DSDJCdK3LKHUsidqUFxUD-cTSC9MS8FW8ND61WU1RzGu7M2ZHd2vLV9eVRLt0g99-U-Y-iyhsRo3HJRd3mXVwhXRHF4xA1wy9T7G6JvBJvomtPzANvxmPt8oIptlc_fQUmv8AEyfW6JAIt-PvnwqvBL6QuoCUK3xmZ1Do6eOgg80nh9aZDTnG7MAXDBuHDR717BLWYTujNNwC5Xr4F8zrH80g_Px77ToNQ6-pV2ObM6n8-yz2IoJiilozvf-yzBnEF_7"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+<!-- Hero Section with Editorial feel -->
+<div class="max-w-6xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+<div class="flex-1">
+<h2 class="font-headline text-5xl font-extrabold tracking-tight text-slate-900 mb-2">My Assignments</h2>
+<p class="text-on-surface-variant max-w-lg leading-relaxed">
+                    Welcome back, Alex. You have <span class="font-semibold text-surface-tint">3 pending tasks</span> for this week. Continue your research on Architectural Typography.
+                </p>
+</div>
+<div class="flex gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col min-w-[140px]">
+<span class="text-xs font-label text-slate-500 mb-1">Completion</span>
+<span class="text-2xl font-bold text-secondary">78%</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col min-w-[140px]">
+<span class="text-xs font-label text-slate-500 mb-1">Avg. Grade</span>
+<span class="text-2xl font-bold text-primary">A-</span>
+</div>
+</div>
+</div>
+<!-- Intentional Asymmetry Layout -->
+<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Side: List of Assignments (Grid style) -->
+<div class="lg:col-span-7 space-y-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline text-xl font-bold">In Progress</h3>
+<div class="flex gap-2">
+<button class="p-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Assignment Card 1: Selected State -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border-l-4 border-surface-tint group transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-surface-tint mb-1 block">Course: AR-402</span>
+<h4 class="text-xl font-bold text-on-surface group-hover:text-surface-tint transition-colors">Advanced Architectural Typography</h4>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-bold rounded-full">Pending</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 line-clamp-2 leading-relaxed">
+                        Explore the intersection of structural form and letterspacing in modern urban environments. Focus on readability and visual weight.
+                    </p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4 text-xs text-slate-500 font-label">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Oct 24, 2023</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">attach_file</span> 2 Files</span>
+</div>
+<div class="w-24 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-surface-tint w-2/3"></div>
+</div>
+</div>
+</div>
+<!-- Assignment Card 2 -->
+<div class="bg-surface-container-low hover:bg-surface-container-lowest rounded-xl p-6 transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1 block">Course: DS-101</span>
+<h4 class="text-xl font-bold text-on-surface">Color Theory in Digital Media</h4>
+</div>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-xs font-bold rounded-full">Submitted</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4 text-xs text-slate-500 font-label">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Oct 18, 2023</span>
+<span class="flex items-center gap-1.5 text-on-secondary-container"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Grade Pending</span>
+</div>
+</div>
+</div>
+<!-- Assignment Card 3 -->
+<div class="bg-surface-container-low hover:bg-surface-container-lowest rounded-xl p-6 transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1 block">Course: UX-505</span>
+<h4 class="text-xl font-bold text-on-surface">Cognitive Psychology &amp; Interaction</h4>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-bold rounded-full">Reviewed</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4 text-xs text-slate-500 font-label">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">grade</span> Score: 94/100</span>
+</div>
+<button class="text-xs font-bold text-surface-tint flex items-center gap-1">
+                            View Feedback <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Side: Detail View (Focused Area) -->
+<div class="lg:col-span-5">
+<div class="bg-surface-container-lowest rounded-2xl shadow-xl shadow-slate-200/50 p-8 sticky top-24">
+<div class="mb-8">
+<div class="flex items-center gap-2 mb-4">
+<span class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-surface-tint">
+<span class="material-symbols-outlined text-sm">info</span>
+</span>
+<h3 class="font-headline font-bold text-lg">Assignment Detail</h3>
+</div>
+<h2 class="font-headline text-2xl font-extrabold text-slate-900 leading-tight mb-4">Advanced Architectural Typography</h2>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant font-label">Submission Deadline</span>
+<span class="font-semibold text-error">Today, 11:59 PM</span>
+</div>
+<div class="flex justify-between items-center text-sm py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant font-label">Weight</span>
+<span class="font-semibold text-on-surface">25% of final grade</span>
+</div>
+<div class="flex justify-between items-center text-sm py-2 border-b border-outline-variant/15">
+<span class="text-on-surface-variant font-label">Format</span>
+<span class="font-semibold text-on-surface">PDF, Figma Link</span>
+</div>
+</div>
+</div>
+<div class="mb-8">
+<h4 class="text-sm font-bold text-on-surface mb-3">Upload your work</h4>
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-10 flex flex-col items-center justify-center bg-surface-container-low/30 hover:bg-surface-container-low transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">cloud_upload</span>
+</div>
+<p class="text-sm font-medium text-on-surface">Drag and drop files</p>
+<p class="text-xs text-on-surface-variant mt-1">or <span class="text-surface-tint underline">browse files</span></p>
+</div>
+</div>
+<div class="mb-8">
+<h4 class="text-sm font-bold text-on-surface mb-3">Submission Link</h4>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-surface-tint/20 transition-all outline-none" placeholder="https://figma.com/file/..." type="url"/>
+</div>
+</div>
+<button class="w-full main-cta-gradient text-on-primary py-4 rounded-xl font-bold shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all">
+                        Submit Assignment
+                    </button>
+<p class="text-center text-[10px] text-on-surface-variant mt-4 font-label">
+                        By submitting, you agree to the institution's academic integrity policies.
+                    </p>
+</div>
+<!-- Contextual Hint Card -->
+<div class="mt-8 p-6 bg-tertiary-fixed rounded-2xl flex gap-4 items-start">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant mt-0.5">lightbulb</span>
+<div>
+<h5 class="text-sm font-bold text-on-tertiary-fixed-variant">Pro Tip: References</h5>
+<p class="text-xs text-on-tertiary-fixed-variant/80 mt-1 leading-relaxed">
+                            Students who include at least 3 case studies in this assignment typically score 15% higher. Check the Library for urban design archives.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Only on Home/Dashboard/Assignments) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 rounded-full main-cta-gradient text-white shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-90 z-50">
+<span class="material-symbols-outlined" data-icon="help_center">help_center</span>
+</button>
+</body></html>
