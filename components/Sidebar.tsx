@@ -135,10 +135,10 @@ export default function Sidebar({ user }: SidebarProps) {
         .sidebar {
           width: 260px;
           min-height: 100vh;
-          background: rgba(8, 8, 15, 0.45);
+          background: rgba(13, 13, 18, 0.6);
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
-          border-right: 1px solid rgba(255, 255, 255, 0.04);
+          border-right: 1px solid rgba(255, 255, 255, 0.05);
           display: flex;
           flex-direction: column;
           padding: 0;
@@ -147,7 +147,7 @@ export default function Sidebar({ user }: SidebarProps) {
           left: 0;
           bottom: 0;
           z-index: 50;
-          box-shadow: 20px 0 40px rgba(0, 0, 0, 0.2);
+          box-shadow: 1px 0 0 rgba(0, 209, 255, 0.04);
         }
 
         .sidebar::before {
@@ -155,7 +155,7 @@ export default function Sidebar({ user }: SidebarProps) {
           position: absolute;
           top: 0; bottom: 0; right: 0;
           width: 1px;
-          background: linear-gradient(180deg, transparent, rgba(255,255,255,0.08), transparent);
+          background: linear-gradient(180deg, transparent, rgba(0, 209, 255, 0.12), transparent);
         }
 
         .sidebar-logo {
@@ -178,7 +178,7 @@ export default function Sidebar({ user }: SidebarProps) {
           font-size: 20px;
           color: #fff;
           flex-shrink: 0;
-          box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+          box-shadow: 0 4px 20px rgba(0, 209, 255, 0.35);
           animation: float 6s ease-in-out infinite;
         }
 
@@ -243,18 +243,18 @@ export default function Sidebar({ user }: SidebarProps) {
 
         .nav-item.active {
           color: #fff;
-          background: rgba(139, 92, 246, 0.1);
-          border: 1px solid rgba(139, 92, 246, 0.2);
-          box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+          background: rgba(0, 209, 255, 0.06);
+          border: 1px solid rgba(0, 209, 255, 0.15);
+          box-shadow: 0 4px 20px rgba(0, 209, 255, 0.08);
         }
 
         .nav-item.active::after {
           content: '';
           position: absolute;
-          left: -1px; top: 15%; bottom: 15%; width: 3px;
-          background: var(--accent-purple);
-          border-radius: 0 4px 4px 0;
-          box-shadow: 0 0 10px var(--accent-purple);
+          left: -1px; top: 15%; bottom: 15%; width: 2px;
+          background: var(--accent-cyan);
+          border-radius: 0 3px 3px 0;
+          box-shadow: 0 0 10px var(--accent-cyan);
         }
 
         .nav-arrow {
@@ -270,7 +270,7 @@ export default function Sidebar({ user }: SidebarProps) {
 
         .nav-item.active .nav-arrow {
           opacity: 1;
-          color: var(--accent-purple);
+          color: var(--accent-cyan);
         }
 
         .sidebar-user {
@@ -278,8 +278,8 @@ export default function Sidebar({ user }: SidebarProps) {
           align-items: center;
           gap: 12px;
           padding: 24px;
-          background: linear-gradient(0deg, rgba(8, 8, 15, 0.8), transparent);
-          border-top: 1px solid rgba(255,255,255,0.03);
+          background: linear-gradient(0deg, rgba(13, 13, 18, 0.95), transparent);
+          border-top: 1px solid rgba(0, 209, 255, 0.06);
           margin-top: 20px;
         }
 
@@ -295,7 +295,7 @@ export default function Sidebar({ user }: SidebarProps) {
           font-weight: 700;
           color: #fff;
           flex-shrink: 0;
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+          box-shadow: 0 4px 16px rgba(0, 209, 255, 0.2);
         }
 
         .user-info {
@@ -359,10 +359,10 @@ export default function Sidebar({ user }: SidebarProps) {
             height: 64px;
             padding-top: env(safe-area-inset-top, 0);
             box-sizing: content-box;
-            background: rgba(8, 8, 15, 0.8);
+            background: rgba(13, 13, 18, 0.9);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(0, 209, 255, 0.08);
             z-index: 100;
             align-items: center;
             justify-content: space-between;
@@ -406,7 +406,7 @@ export default function Sidebar({ user }: SidebarProps) {
             box-shadow: none;
             height: 100vh;
             height: 100dvh;
-            background: rgba(10, 10, 20, 0.98);
+            background: rgba(13, 13, 18, 0.99);
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
           }

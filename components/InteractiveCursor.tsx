@@ -92,10 +92,10 @@ export default function InteractiveCursor() {
           pointer-events: none;
           z-index: 9998;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(59, 130, 246, 0.1) 40%, rgba(0,0,0,0) 70%);
+          background: radial-gradient(circle, rgba(0, 209, 255, 0.25) 0%, rgba(173, 0, 255, 0.08) 45%, rgba(0,0,0,0) 70%);
           transform-origin: center center;
-          margin-left: -75px; /* Offset half of default width */
-          margin-top: -75px;  /* Offset half of default height */
+          margin-left: -75px;
+          margin-top: -75px;
           transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
           mix-blend-mode: screen;
         }
@@ -103,26 +103,26 @@ export default function InteractiveCursor() {
         .cursor-dot {
           position: fixed;
           top: 0; left: 0;
-          width: 8px;
-          height: 8px;
-          background: white;
+          width: 6px;
+          height: 6px;
+          background: #00D1FF;
           border-radius: 50%;
           pointer-events: none;
           z-index: 9999;
-          margin-left: -4px;
-          margin-top: -4px;
+          margin-left: -3px;
+          margin-top: -3px;
           transition: transform 0.05s linear, width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
-          box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px var(--accent-purple);
+          box-shadow: 0 0 8px rgba(0, 209, 255, 0.9), 0 0 20px rgba(0, 209, 255, 0.4);
         }
 
         .cursor-dot-hover {
-          width: 20px;
-          height: 20px;
-          margin-left: -10px;
-          margin-top: -10px;
+          width: 22px;
+          height: 22px;
+          margin-left: -11px;
+          margin-top: -11px;
           background: transparent;
-          border: 2px solid var(--accent-blue);
-          box-shadow: 0 0 15px var(--accent-blue);
+          border: 1.5px solid #00D1FF;
+          box-shadow: 0 0 12px rgba(0, 209, 255, 0.6), inset 0 0 8px rgba(0, 209, 255, 0.08);
         }
       `}</style>
     </>
