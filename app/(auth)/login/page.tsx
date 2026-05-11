@@ -58,11 +58,10 @@ export default function LoginPage() {
           <div className="field">
             <label className="label" htmlFor="email">Email address</label>
             <div className="input-wrapper">
-              <Mail size={16} className="input-icon" />
               <input
                 id="email"
                 type="email"
-                className="input input-with-icon"
+                className="input"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -75,11 +74,10 @@ export default function LoginPage() {
           <div className="field">
             <label className="label" htmlFor="password">Password</label>
             <div className="input-wrapper">
-              <Lock size={16} className="input-icon" />
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                className="input input-with-icon input-with-action"
+                className="input input-with-action"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -117,15 +115,28 @@ export default function LoginPage() {
           padding: 24px;
           position: relative;
           overflow: hidden;
+          background: #05050f;
         }
 
         .auth-bg {
           position: fixed;
           inset: 0;
-          background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 70%),
-                      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+          /* Extended semi-circular gradient covering the top half */
+          background: 
+            radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.45) 0%, rgba(239, 68, 68, 0.2) 35%, rgba(239, 68, 68, 0.05) 70%, transparent 100%);
           pointer-events: none;
           z-index: 0;
+        }
+
+        /* Subtle divider to 'put the page in half' as per doodle */
+        .auth-bg::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
         }
 
         .auth-card {
@@ -134,6 +145,7 @@ export default function LoginPage() {
           padding: 40px;
           position: relative;
           z-index: 1;
+          border-radius: 40px !important;
         }
 
         .auth-header {
@@ -232,15 +244,17 @@ export default function LoginPage() {
           color: var(--text-muted);
         }
 
-        .auth-link {
-          color: var(--accent-purple);
-          text-decoration: none;
-          font-weight: 500;
-          transition: opacity 0.15s;
+        :global(.auth-link) {
+          color: #ef4444 !important;
+          text-decoration: underline !important;
+          text-underline-offset: 4px !important;
+          font-weight: 600 !important;
+          transition: all 0.2s !important;
         }
 
-        .auth-link:hover {
-          opacity: 0.8;
+        :global(.auth-link:hover) {
+          color: #f87171 !important;
+          opacity: 1 !important;
         }
       `}</style>
     </div>

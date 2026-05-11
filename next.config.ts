@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["@prisma/client", "bcryptjs"],
+  serverExternalPackages: ["@prisma/client", "bcryptjs", "livekit-server-sdk"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  allowedDevOrigins: ['192.168.56.1'],
 };
 
 export default nextConfig;

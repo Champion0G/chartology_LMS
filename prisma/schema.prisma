@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -21,6 +22,12 @@ enum DoubtStatus {
   RESOLVED
 }
 
+enum AssignmentType {
+  FILE
+  QUIZ
+  QA
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -30,25 +37,36 @@ model User {
   level     Int      @default(1)
   xp        Int      @default(0)
   createdAt DateTime @default(now())
+  dp        String?
 
-  submissions   Submission[]
-  doubts        Doubt[]
-  assignments   Assignment[]   @relation("CreatedAssignments")
-  notifications Notification[]
+  submissions         Submission[]
+  doubts              Doubt[]
+  assignments         Assignment[]   @relation("CreatedAssignments")
+  notifications       Notification[]
+  faqs                Faq[]          @relation("CreatedFaqs")
+  quizzes             Quiz[]         @relation("CreatedQuizzes")
+  liveClasses         LiveClass[]    @relation("CreatedLiveClasses")
+  attendances         Attendance[]
+  quizSubmissions     QuizSubmission[]
+  liveQuizAnswers     LiveQuizAnswer[]
+  liveChatMessages    LiveChatMessage[]
 }
 
 model Assignment {
-  id          String   @id @default(uuid())
+  id          String         @id @default(uuid())
   title       String
   description String
+  type        AssignmentType @default(FILE)
   fileUrl     String?
   fileName    String?
   deadline    DateTime
   createdBy   String
-  teacher     User     @relation("CreatedAssignments", fields: [createdBy], references: [id])
-  createdAt   DateTime @default(now())
+  teacher     User           @relation("CreatedAssignments", fields: [createdBy], references: [id])
+  createdAt   DateTime       @default(now())
 
-  submissions Submission[]
+  submissions         Submission[]
+  assignmentQuestions AssignmentQuestion[]
+  quizSubmissions     QuizSubmission[]
 }
 
 model Submission {
@@ -64,6 +82,39 @@ model Submission {
 
   student    User       @relation(fields: [studentId], references: [id])
   assignment Assignment @relation(fields: [assignmentId], references: [id])
+}
+
+// Questions for QUIZ and QA assignment types
+model AssignmentQuestion {
+  id            String   @id @default(uuid())
+  assignmentId  String
+  order         Int
+  text          String
+  // For QUIZ type: multiple choice options
+  options       String[]
+  // For QUIZ type: index of correct option (0-based). -1 for QA type.
+  correctOption Int      @default(-1)
+  timeLimit     Int?     @default(30)
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+}
+
+// Student answers for QUIZ and QA assignment types
+model QuizSubmission {
+  id           String   @id @default(uuid())
+  studentId    String
+  assignmentId String
+  // JSON: number[] for MCQ (selected option indices), string[] for QA (text answers)
+  answers      String
+  score        Int?
+  feedback     String?
+  submittedAt  DateTime @default(now())
+  isLate       Boolean  @default(false)
+
+  student    User       @relation(fields: [studentId], references: [id])
+  assignment Assignment @relation(fields: [assignmentId], references: [id])
+
+  @@unique([studentId, assignmentId])
 }
 
 model Doubt {
@@ -96,4 +147,96 @@ model Notification {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  videoUrl  String?
+  link      String?
+  createdBy String
+  createdAt DateTime @default(now())
+
+  teacher User @relation("CreatedFaqs", fields: [createdBy], references: [id])
+}
+
+model Quiz {
+  id                   String   @id @default(uuid())
+  title                String
+  isActive             Boolean  @default(false)
+  currentQuestionIndex Int      @default(0)
+  timePerQuestion      Int      @default(30)
+  createdBy            String
+  createdAt            DateTime @default(now())
+
+  teacher   User       @relation("CreatedQuizzes", fields: [createdBy], references: [id])
+  questions Question[]
+  answers   LiveQuizAnswer[]
+}
+
+model Question {
+  id            String   @id @default(uuid())
+  quizId        String
+  text          String
+  options       String[]
+  correctOption Int
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers LiveQuizAnswer[]
+}
+
+model LiveQuizAnswer {
+  id         String   @id @default(uuid())
+  quizId     String
+  questionId String
+  studentId  String
+  answerIndex Int
+  isCorrect  Boolean
+  timeTaken  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  student  User     @relation(fields: [studentId], references: [id])
+  quiz     Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([quizId, questionId, studentId])
+}
+
+model LiveClass {
+  id           String   @id @default(uuid())
+  title        String
+  description  String?
+  roomName     String   @unique
+  instructorId String
+  startTime    DateTime
+  endTime      DateTime
+  createdAt    DateTime @default(now())
+
+  instructor   User              @relation("CreatedLiveClasses", fields: [instructorId], references: [id])
+  attendances  Attendance[]
+  chatMessages LiveChatMessage[]
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  userId    String
+  classId   String
+  joinedAt  DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+  liveClass LiveClass @relation(fields: [classId], references: [id])
+
+  @@unique([userId, classId])
+}
+
+model LiveChatMessage {
+  id        String   @id @default(uuid())
+  classId   String
+  userId    String
+  message   String
+  createdAt DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+  liveClass LiveClass @relation(fields: [classId], references: [id], onDelete: Cascade)
 }

@@ -10,7 +10,8 @@ export async function GET() {
     orderBy: { createdAt: 'desc' },
     include: {
       teacher: { select: { name: true } },
-      _count: { select: { submissions: true } },
+      _count: { select: { submissions: true, quizSubmissions: true } },
+      assignmentQuestions: { orderBy: { order: 'asc' } },
     },
   })
 
@@ -22,10 +23,16 @@ export async function GET() {
     })
     const subMap = Object.fromEntries(submissions.map((s: any) => [s.assignmentId, s]))
 
+    const quizSubmissions = await prisma.quizSubmission.findMany({
+      where: { studentId: session.userId },
+      select: { assignmentId: true, score: true, submittedAt: true, feedback: true, answers: true },
+    })
+    const quizSubMap = Object.fromEntries(quizSubmissions.map((s: any) => [s.assignmentId, s]))
+
     return NextResponse.json(
       assignments.map((a: any) => ({
         ...a,
-        submission: subMap[a.id] || null,
+        submission: a.type === 'FILE' ? (subMap[a.id] || null) : (quizSubMap[a.id] ? { ...quizSubMap[a.id], grade: quizSubMap[a.id].score } : null),
       }))
     )
   }
@@ -40,19 +47,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { title, description, deadline, fileUrl, fileName } = await request.json()
+  const { title, description, deadline, fileUrl, fileName, type, questions } = await request.json()
   if (!title || !description || !deadline) {
     return NextResponse.json({ error: 'All fields required' }, { status: 400 })
   }
+
+  const assignmentType = type || 'FILE';
 
   const assignment = await prisma.assignment.create({
     data: {
       title,
       description,
+      type: assignmentType,
       deadline: new Date(deadline),
       fileUrl: fileUrl || null,
       fileName: fileName || null,
       createdBy: session.userId,
+      ...(questions && questions.length > 0 && {
+        assignmentQuestions: {
+          create: questions.map((q: any, idx: number) => ({
+            order: idx,
+            text: q.text,
+            options: q.options || [],
+            correctOption: q.correctOption !== undefined ? q.correctOption : -1,
+            timeLimit: q.timeLimit ? parseInt(q.timeLimit) : 30,
+          }))
+        }
+      })
     },
   })
 
@@ -71,3 +92,4 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json(assignment, { status: 201 })
 }
+

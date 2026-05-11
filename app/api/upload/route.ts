@@ -14,26 +14,40 @@ export async function POST(request: NextRequest) {
 
   const formData = await request.formData()
   const file = formData.get('file') as File | null
+  const uploadType = formData.get('type') as string || 'submission'
 
   if (!file) {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 })
   }
 
-  if (file.size > 10 * 1024 * 1024) {
-    return NextResponse.json({ error: 'File too large (max 10MB)' }, { status: 400 })
+  if (file.size > 50 * 1024 * 1024) {
+    return NextResponse.json({ error: 'File too large (max 50MB)' }, { status: 400 })
   }
 
   const bytes = await file.arrayBuffer()
   const buffer = Buffer.from(bytes)
+
+  let folder = 'csol-lms/submissions'
+  let prefix = 'submission'
+  if (uploadType === 'dp') {
+    folder = 'csol-lms/profiles'
+    prefix = 'dp'
+  } else if (uploadType === 'faq') {
+    folder = 'csol-lms/faqs'
+    prefix = 'faq'
+  } else if (uploadType === 'resource') {
+    folder = 'csol-lms/resources'
+    prefix = 'res'
+  }
 
   const result = await new Promise<{ secure_url: string; original_filename: string }>(
     (resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
           {
-            folder: 'csol-lms/submissions',
+            folder,
             resource_type: 'auto',
-            public_id: `submission_${session.userId}_${Date.now()}`,
+            public_id: `${prefix}_${session.userId}_${Date.now()}`,
           },
           (error, result) => {
             if (error || !result) reject(error)
