@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db'
 import { calculateLevel } from '@/lib/xp'
 import { Star, FileText, TrendingUp } from 'lucide-react'
 import type { Metadata } from 'next'
+import DpUploader from './DpUploader'
 
 export const metadata: Metadata = { title: 'Profile' }
 
@@ -13,7 +14,7 @@ export default async function ProfilePage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    select: { id: true, name: true, email: true, role: true, xp: true, level: true, createdAt: true },
+    select: { id: true, name: true, email: true, role: true, xp: true, level: true, createdAt: true, dp: true },
   })
   if (!user) redirect('/login')
 
@@ -51,7 +52,7 @@ export default async function ProfilePage() {
         {/* Left: Avatar + Info */}
         <div>
           <div className="glass-card profile-card">
-            <div className="avatar-large">{initials}</div>
+            <DpUploader currentDp={user.dp} initials={initials} />
             <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{user.name}</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 16 }}>{user.email}</p>
 

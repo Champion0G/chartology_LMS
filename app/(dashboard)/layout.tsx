@@ -13,7 +13,7 @@ export default async function DashboardLayout({
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    select: { id: true, name: true, email: true, role: true, level: true, xp: true },
+    select: { id: true, name: true, email: true, role: true, level: true, xp: true, dp: true },
   })
 
   if (!user) redirect('/login')
@@ -27,6 +27,7 @@ export default async function DashboardLayout({
           role: user.role,
           level: user.level,
           xp: user.xp,
+          dp: user.dp,
         }}
       />
       <main className="layout-main">

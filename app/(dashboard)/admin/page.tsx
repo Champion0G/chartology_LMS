@@ -17,6 +17,9 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [roleFilter, setRoleFilter] = useState('ALL')
+  const [sortBy, setSortBy] = useState('newest')
 
   const load = useCallback(async () => {
     const res = await fetch('/api/admin/users')
@@ -36,6 +39,20 @@ export default function AdminPage() {
     )
   }
 
+  const filteredUsers = users
+    .filter(u => {
+      const matchSearch = u.name.toLowerCase().includes(searchTerm.toLowerCase()) || u.email.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchRole = roleFilter === 'ALL' || u.role === roleFilter
+      return matchSearch && matchRole
+    })
+    .sort((a, b) => {
+      if (sortBy === 'newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      if (sortBy === 'oldest') return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      if (sortBy === 'level-desc') return b.level - a.level
+      if (sortBy === 'level-asc') return a.level - b.level
+      return 0
+    })
+
   return (
     <div className="fade-up admin-container">
       <div className="page-header admin-header">
@@ -49,6 +66,22 @@ export default function AdminPage() {
         <button className="btn-primary create-btn" onClick={() => setShowCreate(true)}>
           <Plus size={16} /> Create Teacher
         </button>
+      </div>
+
+      <div className="filter-bar glass-card">
+        <input type="text" placeholder="Search users by name or email..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="input search-input" />
+        <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)} className="input select-input">
+          <option value="ALL" style={{color: 'black'}}>All Roles</option>
+          <option value="STUDENT" style={{color: 'black'}}>Students</option>
+          <option value="TEACHER" style={{color: 'black'}}>Teachers</option>
+          <option value="ADMIN" style={{color: 'black'}}>Admins</option>
+        </select>
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="input select-input">
+          <option value="newest" style={{color: 'black'}}>Newest First</option>
+          <option value="oldest" style={{color: 'black'}}>Oldest First</option>
+          <option value="level-desc" style={{color: 'black'}}>Highest Level</option>
+          <option value="level-asc" style={{color: 'black'}}>Lowest Level</option>
+        </select>
       </div>
 
       <div className="admin-content">
@@ -65,7 +98,7 @@ export default function AdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(u => (
+                {filteredUsers.map(u => (
                   <tr key={u.id}>
                     <td>
                       <div className="user-cell">
@@ -98,7 +131,7 @@ export default function AdminPage() {
 
         {/* Mobile Card View */}
         <div className="mobile-user-list">
-          {users.map(u => (
+          {filteredUsers.map(u => (
             <div key={u.id} className="glass-card user-mobile-card">
               <div className="user-mobile-header">
                 <div className="user-avatar-small">
@@ -146,6 +179,10 @@ export default function AdminPage() {
         
         .create-btn { display: flex; align-items: center; gap: 8px; padding: 10px 18px; font-size: 14px; }
         
+        .filter-bar { display: flex; gap: 16px; padding: 20px; margin-bottom: 28px; flex-wrap: wrap; align-items: center; }
+        .search-input { flex: 1; min-width: 240px; background: rgba(0,0,0,0.3) !important; border-color: rgba(255,255,255,0.1); height: 48px; border-radius: 12px; padding: 0 16px; }
+        .select-input { background: rgba(0,0,0,0.3) !important; border-color: rgba(255,255,255,0.1); color: #fff; min-width: 160px; height: 48px; border-radius: 12px; padding: 0 12px; cursor: pointer; }
+
         .mobile-user-list { display: none; flex-direction: column; gap: 12px; }
         
         @media (max-width: 768px) {

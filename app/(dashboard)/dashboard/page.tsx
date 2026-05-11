@@ -218,8 +218,8 @@ function StatCard({
   href?: string
 }) {
   const colorMap = {
-    blue: { bg: 'var(--accent-blue-dim)', fg: 'var(--accent-blue)' },
-    purple: { bg: 'var(--accent-purple-dim)', fg: 'var(--accent-purple)' },
+    blue: { bg: 'var(--accent-red-dim)', fg: 'var(--accent-red)' },
+    purple: { bg: 'rgba(220, 38, 38, 0.15)', fg: '#dc2626' },
     success: { bg: 'var(--success-dim)', fg: 'var(--success)' },
     warning: { bg: 'var(--warning-dim)', fg: 'var(--warning)' },
   }
@@ -227,11 +227,17 @@ function StatCard({
   
   const content = (
     <div className="stat-card glass-card" style={href ? { cursor: 'pointer', transition: 'transform 0.2s', backgroundImage: 'var(--bg-card)' } : {}}>
-      <div className="stat-icon" style={{ background: c.bg, color: c.fg }}>
-        {icon}
+      <div className="stat-card-main">
+        <div className="stat-card-left">
+          <div className="stat-icon" style={{ background: c.bg, color: c.fg }}>
+            {icon}
+          </div>
+          <div className="stat-label">{label}</div>
+        </div>
+        <div className="stat-card-right">
+          {value}
+        </div>
       </div>
-      <div className="stat-value">{value}</div>
-      <div className="stat-label">{label}</div>
     </div>
   )
   
