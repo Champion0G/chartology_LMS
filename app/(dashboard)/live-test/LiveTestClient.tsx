@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Play, Plus, X, Loader2, CheckCircle2, Clock, AlertTriangle, Trophy, Medal } from 'lucide-react'
 
 type Question = {
@@ -424,9 +425,9 @@ function CreateQuizModal({ onClose, onCreated }: { onClose: () => void; onCreate
     setLoading(false)
   }
 
-  return (
-    <div className="modal-breakout-overlay">
-      <div className="modal-fullscreen-content glass-card">
+  return createPortal((
+    <div className="dashboard-modal-overlay modal-breakout-overlay">
+      <div className="modal-fullscreen-content glass-card dashboard-modal-card">
         <div className="modal-fullscreen-wrapper">
           <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 48, alignItems: 'center' }}>
             <div>
@@ -506,23 +507,11 @@ function CreateQuizModal({ onClose, onCreated }: { onClose: () => void; onCreate
 
       <style jsx>{`
         .modal-breakout-overlay {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.95);
-  z-index: 9999;
-  backdrop-filter: blur(10px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px;
-  display: block;
-  box-sizing: border-box;
+  background: #000;
 }
         .modal-fullscreen-content {
   width: 100%;
   max-width: 900px;
-  margin: 5vh auto;
   position: relative;
   padding: 40px;
   overflow: visible !important;
@@ -544,6 +533,6 @@ function CreateQuizModal({ onClose, onCreated }: { onClose: () => void; onCreate
         }
       `}</style>
     </div>
-  )
+  ), document.body)
 }
 

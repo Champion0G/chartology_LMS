@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Loader2, Calendar, Clock, FileText, AlignLeft } from 'lucide-react'
 
 type Props = { onClose: () => void; onCreated: () => void }
@@ -92,29 +93,18 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
     }
   }
 
-  return (
+  return createPortal((
     <div
+      className="dashboard-modal-overlay"
       style={{
-        position: 'fixed',
-        inset: 0,
-        width: '100vw',
-        height: '100vh',
-        background: 'rgba(0,0,0,0.95)', /* Made the background overlay darker */
-        zIndex: 9999,
-        backdropFilter: 'blur(10px)', /* Increased blur for stronger effect */
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        padding: '16px',
-        display: 'block',
-        boxSizing: 'border-box',
+        background: '#000',
       }}
     >
       <div
-        className="glass-card"
+        className="glass-card dashboard-modal-card"
         style={{
           width: '100%',
           maxWidth: '650px',
-          margin: '5vh auto',
           padding: '40px',
           position: 'relative',
           overflow: 'visible',
@@ -238,5 +228,5 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
         </div>
       </div>
     </div>
-  )
+  ), document.body)
 }

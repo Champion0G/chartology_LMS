@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { BookOpen, Play, Plus, X, ExternalLink, Loader2 } from 'lucide-react'
 
 type Resource = {
@@ -227,46 +228,42 @@ function AddResourceModal({ onClose, onAdded }: { onClose: () => void; onAdded: 
     }
   }
 
-  return (
-    <div className="modal-breakout-overlay">
-      <div className="modal-fullscreen-content">
-        <div className="modal-fullscreen-wrapper">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 48 }}>
-            <div>
-              <h2 className="gradient-text" style={{ fontSize: 36, fontWeight: 800 }}>Add Resource</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>Upload new educational materials for your class</p>
-            </div>
-            <button onClick={onClose} className="close-btn-breakout" title="Close"><X size={28} /></button>
-          </div>
+  return createPortal((
+    <div className="modal-overlay">
+      <div className="modal glass-card">
+        <div className="modal-header">
+          <h2>Add Resource</h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+        </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {error && <div style={{ background: 'var(--danger-dim)', color: 'var(--danger)', padding: 16, borderRadius: 12, fontSize: 14 }}>{error}</div>}
             
-            <div className="form-group-fullscreen">
+            <div>
               <label className="label">Title</label>
               <input className="input" placeholder="e.g. Introduction to Technical Analysis" value={title} onChange={e => setTitle(e.target.value)} required />
             </div>
             
-            <div className="form-group-fullscreen">
+            <div>
               <label className="label">YouTube Link</label>
               <input className="input" type="url" placeholder="https://youtube.com/watch?v=..." value={videoUrl} onChange={e => {setVideoUrl(e.target.value); setFile(null)}} disabled={!!file} />
             </div>
 
             <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>OR</div>
 
-            <div className="form-group-fullscreen">
+            <div>
                <label className="label">Upload File directly (max 50MB) - Video, PDF, Image</label>
                <div 
-                 className={`upload-zone ${videoUrl ? 'disabled' : ''}`}
+                 className={`upload-area ${videoUrl ? 'disabled' : ''}`}
                  onClick={() => { if (!videoUrl) document.getElementById('res-video-upload')?.click() }}
                >
-                 <Play size={32} style={{ opacity: 0.5, marginBottom: 12 }} />
+                 <Play size={20} style={{ opacity: 0.5 }} />
                  <div style={{ fontSize: 15, fontWeight: 500 }}>{file ? file.name : 'Click to select a file'}</div>
                  <input id="res-video-upload" type="file" accept="video/*,application/pdf,image/*" style={{ display: 'none' }} onChange={e => {if (e.target.files?.[0]) {setFile(e.target.files[0]); setVideoUrl('');}}} />
                </div>
             </div>
 
-            <div className="form-group-fullscreen">
+            <div>
               <label className="label">Description (optional)</label>
               <textarea className="input" placeholder="Briefly describe what this resource covers..." rows={3} value={description} onChange={e => setDescription(e.target.value)} style={{ resize: 'vertical' }} />
             </div>
@@ -278,25 +275,24 @@ function AddResourceModal({ onClose, onAdded }: { onClose: () => void; onAdded: 
               </button>
             </div>
           </form>
-        </div>
       </div>
       
       <style jsx>{`
-        .modal-breakout-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-primary); z-index: 999999; overflow-y: auto; overflow-x: hidden; display: flex; align-items: center; justify-content: center; padding: 40px; }
-        .modal-fullscreen-content { width: 100%; max-width: 900px; position: relative; }
-        .close-btn-breakout { position: fixed; top: 40px; right: 40px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; z-index: 1000000; }
-        .close-btn-breakout:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger-dim); }
-        .form-group-fullscreen { display: flex; flex-direction: column; gap: 8px; }
-        .upload-zone { padding: 32px; border: 2px dashed var(--border); border-radius: 16px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.2s; }
-        .upload-zone:hover { border-color: var(--accent-purple); background: rgba(139, 92, 246, 0.05); }
-        .upload-zone.disabled { opacity: 0.5; cursor: not-allowed; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; backdrop-filter: blur(4px); overflow-y: auto; overflow-x: hidden; padding: 16px; display: flex; align-items: flex-start; justify-content: center; }
+        .modal { width: 100%; max-width: 560px; margin: 5vh auto; padding: 28px 24px; border-radius: var(--radius-lg); transition: all 0.3s ease; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 18px; line-height: 1.2; }
+        .upload-area {
+          border: 1px dashed var(--border-accent); border-radius: var(--radius-sm);
+          padding: 16px; display: flex; align-items: center; gap: 10px;
+          cursor: pointer; color: var(--text-muted); font-size: 13px;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .upload-area:hover { border-color: var(--accent-purple); background: var(--accent-purple-dim); }
+        .upload-area.disabled { opacity: 0.5; cursor: not-allowed; }
         .spinner { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @media (max-width: 768px) {
-          .modal-fullscreen-content { padding: 60px 20px; }
-          .close-btn-breakout { top: 20px; right: 20px; padding: 10px; }
-        }
       `}</style>
     </div>
-  )
+  ), document.body)
 }

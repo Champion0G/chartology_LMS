@@ -38,6 +38,7 @@
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
   --shadow-glow: 0 0 50px rgba(239, 68, 68, 0.35);
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --dashboard-sidebar-width: 240px;
 }
 
 *, *::before, *::after {
@@ -266,7 +267,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Fluid Fade Up */
 @keyframes fadeUp {
   0%   { opacity: 0; transform: translateY(20px) scale(0.98); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 1; transform: none; }
 }
 
 .fade-up {
@@ -283,7 +284,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .layout-main {
   flex: 1;
-  margin-left: 240px; /* Width of the sidebar */
+  margin-left: var(--dashboard-sidebar-width);
   padding: 32px;
   min-height: 100vh;
   background: transparent;
@@ -296,11 +297,40 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
 }
 
+.dashboard-modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #000;
+  z-index: 9999;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  display: flex;
+  align-items: safe center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.dashboard-modal-card {
+  margin: auto;
+}
+
 
 @media (max-width: 768px) {
   .layout-main {
     margin-left: 0;
     padding: 80px 12px 40px 12px; /* reduced from 16px to 12px for maximum space */
+  }
+
+  .dashboard-modal-overlay {
+    left: 0;
+    padding: 20px;
   }
   
   .glass-card {

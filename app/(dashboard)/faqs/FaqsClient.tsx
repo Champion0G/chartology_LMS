@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { HelpCircle, Plus, X, Video, ExternalLink, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
 
 type Faq = {
@@ -185,29 +186,18 @@ function CreateFaqModal({ onClose, onCreated }: { onClose: () => void; onCreated
     }
   }
 
-  return (
+  return createPortal((
     <div
+      className="dashboard-modal-overlay"
       style={{
-        position: 'fixed',
-        inset: 0,
-        width: '100vw',
-        height: '100vh',
-        background: 'rgba(0,0,0,0.95)',
-        zIndex: 9999,
-        backdropFilter: 'blur(10px)',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        padding: '16px',
-        display: 'block',
-        boxSizing: 'border-box',
+        background: '#000',
       }}
     >
       <div
-        className="glass-card"
+        className="glass-card dashboard-modal-card"
         style={{
           width: '100%',
           maxWidth: '600px',
-          margin: '5vh auto',
           padding: '40px',
           position: 'relative',
           overflow: 'visible',
@@ -273,5 +263,5 @@ function CreateFaqModal({ onClose, onCreated }: { onClose: () => void; onCreated
         </div>
       </div>
     </div>
-  )
+  ), document.body)
 }
