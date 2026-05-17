@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Shield, Plus, X, Users, Trash2 } from 'lucide-react'
+import { Shield, Plus, X, Users, Trash2, Key } from 'lucide-react'
 
 type User = {
   id: string
@@ -20,12 +20,24 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [roleFilter, setRoleFilter] = useState('ALL')
   const [sortBy, setSortBy] = useState('newest')
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [changePasswordUser, setChangePasswordUser] = useState<User | null>(null)
 
   const load = useCallback(async () => {
-    const res = await fetch('/api/admin/users')
-    const data = await res.json()
-    setUsers(data)
-    setLoading(false)
+    try {
+      const [uRes, meRes] = await Promise.all([
+        fetch('/api/admin/users'),
+        fetch('/api/me')
+      ])
+      const usersData = await uRes.json()
+      const meData = await meRes.json()
+      setUsers(usersData)
+      setCurrentUserId(meData.id)
+    } catch (e) {
+      console.error('Failed to load admin data', e)
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => { load() }, [load])
@@ -139,9 +151,32 @@ export default function AdminPage() {
                       {new Date(u.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
                     <td>
-                      <button className="btn-danger-dim" style={{ padding: '6px 10px' }} onClick={() => deleteUser(u.id, u.name)} title="Delete user">
-                        <Trash2 size={14} />
-                      </button>
+                      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                        {(u.role === 'STUDENT' || u.role === 'TEACHER') && (
+                          <button
+                            className="btn-secondary"
+                            style={{ padding: '6px 10px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                            onClick={() => setChangePasswordUser(u)}
+                            title="Change password"
+                          >
+                            <Key size={13} /> Pass
+                          </button>
+                        )}
+                        {u.id !== currentUserId ? (
+                          <button
+                            className="btn-danger-dim"
+                            style={{ padding: '6px 10px' }}
+                            onClick={() => deleteUser(u.id, u.name)}
+                            title="Delete user"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        ) : (
+                          <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500, padding: '6px 8px' }}>
+                            (You)
+                          </span>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -176,10 +211,27 @@ export default function AdminPage() {
                   <span className="stat-value">{new Date(u.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 </div>
               </div>
-              <div style={{ marginTop: 12, borderTop: '1px solid var(--border)', paddingTop: 12, display: 'flex', justifyContent: 'flex-end' }}>
-                <button className="btn-danger-dim" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', fontSize: 12 }} onClick={() => deleteUser(u.id, u.name)}>
-                  <Trash2 size={13} /> Delete
-                </button>
+              <div style={{ marginTop: 12, borderTop: '1px solid var(--border)', paddingTop: 12, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                {(u.role === 'STUDENT' || u.role === 'TEACHER') && (
+                  <button
+                    className="btn-secondary"
+                    style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', fontSize: 12 }}
+                    onClick={() => setChangePasswordUser(u)}
+                  >
+                    <Key size={13} /> Password
+                  </button>
+                )}
+                {u.id !== currentUserId ? (
+                  <button
+                    className="btn-danger-dim"
+                    style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', fontSize: 12 }}
+                    onClick={() => deleteUser(u.id, u.name)}
+                  >
+                    <Trash2 size={13} /> Delete
+                  </button>
+                ) : (
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)', padding: '6px 12px', fontWeight: 500 }}>(You)</span>
+                )}
               </div>
             </div>
           ))}
@@ -187,6 +239,7 @@ export default function AdminPage() {
       </div>
 
       {showCreate && <CreateTeacherModal onClose={() => setShowCreate(false)} onCreated={load} />}
+      {changePasswordUser && <ChangePasswordModal user={changePasswordUser} onClose={() => setChangePasswordUser(null)} />}
 
       <style jsx>{`
         .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
@@ -294,6 +347,114 @@ function CreateTeacherModal({ onClose, onCreated }: { onClose: () => void; onCre
             </button>
           </div>
         </form>
+      </div>
+      <style jsx>{`
+        .modal-overlay { position: fixed; inset: 0; background: rgba(5, 5, 15, 0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(12px); padding: 20px; }
+        .modal { width: 100%; max-width: 440px; padding: 32px; border: 1px solid rgba(255,255,255,0.08); }
+        .modal-fade-in { animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
+        .modal-title { font-size: 20px; font-weight: 700; color: #fff; }
+        .modal-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+        .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .close-btn:hover { background: var(--danger-dim); color: var(--danger); border-color: rgba(239,68,68,0.2); }
+        
+        .modal-form { display: flex; flex-direction: column; gap: 20px; }
+        .error-alert { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 12px 16px; font-size: 13px; font-weight: 500; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .mobile-input { height: 48px; border-radius: 12px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); width: 100%; }
+        
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 4px; }
+        .mobile-btn { padding: 12px 20px; font-size: 14px; border-radius: 12px; font-weight: 600; }
+        .highlight-btn { flex: 1; box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3); }
+
+        @media (max-width: 480px) {
+          .modal { padding: 24px; border-radius: 20px; }
+          .modal-actions { flex-direction: column-reverse; gap: 8px; }
+          .mobile-btn { width: 100%; padding: 14px; }
+          .modal-overlay { padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0)); }
+        }
+      `}</style>
+    </div>
+  )
+}
+
+function ChangePasswordModal({ user, onClose }: { user: User; onClose: () => void }) {
+  const [newPassword, setNewPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess(false)
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: user.id, newPassword }),
+      })
+      
+      const d = await res.json()
+      if (!res.ok) {
+        throw new Error(d.error || 'Failed to update password')
+      }
+
+      setSuccess(true)
+      setTimeout(() => {
+        onClose()
+      }, 1500)
+    } catch (err: any) {
+      setError(err.message)
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal glass-card modal-fade-in">
+        <div className="modal-header">
+          <div>
+            <h2 className="modal-title">Change Password</h2>
+            <p className="modal-subtitle">Reset password for {user.name}</p>
+          </div>
+          <button className="close-btn" onClick={onClose}><X size={20} /></button>
+        </div>
+        
+        {success ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, padding: '24px 0', color: 'var(--success)', textAlign: 'center' }}>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>Password updated successfully!</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Closing window...</div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="modal-form">
+            {error && <div className="error-alert">{error}</div>}
+            
+            <div className="form-group">
+              <label className="label">New Password</label>
+              <input 
+                className="input mobile-input" 
+                type="password" 
+                placeholder="Enter at least 8 characters" 
+                value={newPassword} 
+                onChange={e => setNewPassword(e.target.value)} 
+                required 
+                minLength={8} 
+              />
+            </div>
+            
+            <div className="modal-actions">
+              <button type="button" className="btn-secondary mobile-btn" onClick={onClose}>Cancel</button>
+              <button type="submit" className="btn-primary mobile-btn highlight-btn" disabled={loading}>
+                {loading ? 'Updating...' : 'Update Password'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
       <style jsx>{`
         .modal-overlay { position: fixed; inset: 0; background: rgba(5, 5, 15, 0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(12px); padding: 20px; }

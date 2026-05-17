@@ -58,3 +58,26 @@ export async function DELETE(request: NextRequest) {
   await prisma.user.delete({ where: { id } })
   return NextResponse.json({ success: true })
 }
+
+export async function PATCH(request: NextRequest) {
+  const session = await getSession()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (session.role !== 'ADMIN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  const { id, newPassword } = await request.json()
+  if (!id || !newPassword) {
+    return NextResponse.json({ error: 'User ID and new password are required' }, { status: 400 })
+  }
+
+  if (newPassword.length < 8) {
+    return NextResponse.json({ error: 'Password must be at least 8 characters long' }, { status: 400 })
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 12)
+  await prisma.user.update({
+    where: { id },
+    data: { password: hashed }
+  })
+
+  return NextResponse.json({ success: true })
+}
