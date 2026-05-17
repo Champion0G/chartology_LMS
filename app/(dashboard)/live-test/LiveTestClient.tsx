@@ -22,12 +22,12 @@ export default function LiveTestClient({ role }: { role: string }) {
   const [activeQuiz, setActiveQuiz] = useState<Quiz | null>(null)
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
-  
+
   const [localQuestionIndex, setLocalQuestionIndex] = useState(0)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [hasAnswered, setHasAnswered] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
-  
+
   // Timer state
   const [timeLeft, setTimeLeft] = useState<number>(0)
   const [timeTaken, setTimeTaken] = useState<number>(0)
@@ -40,7 +40,7 @@ export default function LiveTestClient({ role }: { role: string }) {
         if (res.ok) {
           const data = await res.json()
           if (!activeQuiz && data && !isCompleted) {
-             setTimeLeft(data.timePerQuestion || 30)
+            setTimeLeft(data.timePerQuestion || 30)
           }
           setActiveQuiz(data)
         } else {
@@ -50,7 +50,7 @@ export default function LiveTestClient({ role }: { role: string }) {
           setIsCompleted(false)
           setHasAnswered(false)
         }
-      } catch (e) {} finally {
+      } catch (e) { } finally {
         setLoading(false)
       }
     }
@@ -82,19 +82,19 @@ export default function LiveTestClient({ role }: { role: string }) {
   async function handleTimeUp() {
     if (hasAnswered) return
     setHasAnswered(true)
-    
+
     try {
       await fetch('/api/live-test/answer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          quizId: activeQuiz?.id, 
-          questionId: activeQuiz?.questions[localQuestionIndex].id, 
+        body: JSON.stringify({
+          quizId: activeQuiz?.id,
+          questionId: activeQuiz?.questions[localQuestionIndex].id,
           answerIndex: -1,
           timeTaken: activeQuiz?.timePerQuestion || 30
         })
       })
-    } catch (e) {}
+    } catch (e) { }
   }
 
   if (role === 'TEACHER' || role === 'ADMIN') {
@@ -126,7 +126,7 @@ export default function LiveTestClient({ role }: { role: string }) {
         <Trophy size={64} style={{ margin: '0 auto 24px', color: '#fbbf24' }} />
         <h2 style={{ fontSize: 28, marginBottom: 12, fontWeight: 800 }}>Quiz Completed!</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 16, lineHeight: 1.5 }}>
-          Awesome job! You've finished all the questions.<br/>
+          Awesome job! You've finished all the questions.<br />
           Check the screen or wait for the teacher to reveal the final leaderboard.
         </p>
       </div>
@@ -139,19 +139,19 @@ export default function LiveTestClient({ role }: { role: string }) {
     if (hasAnswered || timeLeft <= 0) return
     setSelectedOption(index)
     setHasAnswered(true)
-    
+
     try {
       await fetch('/api/live-test/answer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          quizId: activeQuiz?.id, 
-          questionId: currentQuestion.id, 
+        body: JSON.stringify({
+          quizId: activeQuiz?.id,
+          questionId: currentQuestion.id,
           answerIndex: index,
           timeTaken
         })
       })
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function nextQuestion() {
@@ -357,9 +357,9 @@ function LeaderboardPanel({ quizId }: { quizId: string }) {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {leaderboard.map((student, idx) => (
-            <div key={student.studentName} style={{ 
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
-              padding: 16, borderRadius: 12, 
+            <div key={student.studentName} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: 16, borderRadius: 12,
               background: idx === 0 ? 'rgba(251, 191, 36, 0.1)' : idx === 1 ? 'rgba(156, 163, 175, 0.1)' : idx === 2 ? 'rgba(180, 83, 9, 0.1)' : 'rgba(255,255,255,0.02)',
               border: `1px solid ${idx === 0 ? 'rgba(251, 191, 36, 0.3)' : idx === 1 ? 'rgba(156, 163, 175, 0.3)' : idx === 2 ? 'rgba(180, 83, 9, 0.3)' : 'var(--border)'}`
             }}>
@@ -395,6 +395,18 @@ function CreateQuizModal({ onClose, onCreated }: { onClose: () => void; onCreate
   const [questions, setQuestions] = useState([{ text: '', options: ['', '', '', ''], correctIndex: 0 }])
   const [loading, setLoading] = useState(false)
 
+  // Lock body and html scroll when modal is open
+  useEffect(() => {
+    const originalBody = document.body.style.overflow
+    const originalHtml = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => { 
+      document.body.style.overflow = originalBody
+      document.documentElement.style.overflow = originalHtml
+    }
+  }, [])
+
   const addQuestion = () => setQuestions([...questions, { text: '', options: ['', '', '', ''], correctIndex: 0 }])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -414,7 +426,7 @@ function CreateQuizModal({ onClose, onCreated }: { onClose: () => void; onCreate
 
   return (
     <div className="modal-breakout-overlay">
-      <div className="modal-fullscreen-content">
+      <div className="modal-fullscreen-content glass-card">
         <div className="modal-fullscreen-wrapper">
           <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 48, alignItems: 'center' }}>
             <div>
@@ -444,35 +456,35 @@ function CreateQuizModal({ onClose, onCreated }: { onClose: () => void; onCreate
                     <button type="button" className="btn-danger-dim" onClick={() => setQuestions(questions.filter((_, i) => i !== qIndex))}>Remove</button>
                   )}
                 </div>
-                <input 
-                  className="input" 
+                <input
+                  className="input"
                   style={{ marginBottom: 20 }}
-                  placeholder="Question text" 
-                  value={q.text} 
+                  placeholder="Question text"
+                  value={q.text}
                   onChange={e => {
                     const newQ = [...questions]; newQ[qIndex].text = e.target.value; setQuestions(newQ);
-                  }} 
-                  required 
+                  }}
+                  required
                 />
                 <div className="options-grid">
                   {q.options.map((opt, oIndex) => (
                     <div key={oIndex} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <input 
-                        type="radio" 
-                        name={`correct-${qIndex}`} 
-                        checked={q.correctIndex === oIndex} 
+                      <input
+                        type="radio"
+                        name={`correct-${qIndex}`}
+                        checked={q.correctIndex === oIndex}
                         onChange={() => {
                           const newQ = [...questions]; newQ[qIndex].correctIndex = oIndex; setQuestions(newQ);
                         }}
                       />
-                      <input 
-                        className="input" 
-                        placeholder={`Option ${oIndex + 1}`} 
-                        value={opt} 
+                      <input
+                        className="input"
+                        placeholder={`Option ${oIndex + 1}`}
+                        value={opt}
                         onChange={e => {
                           const newQ = [...questions]; newQ[qIndex].options[oIndex] = e.target.value; setQuestions(newQ);
-                        }} 
-                        required 
+                        }}
+                        required
                       />
                     </div>
                   ))}
@@ -493,9 +505,32 @@ function CreateQuizModal({ onClose, onCreated }: { onClose: () => void; onCreate
       </div>
 
       <style jsx>{`
-        .modal-breakout-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-primary); z-index: 999999; overflow-y: auto; overflow-x: hidden; display: flex; align-items: flex-start; justify-content: center; padding: 40px; }
-        .modal-fullscreen-content { width: 100%; max-width: 900px; position: relative; }
-        .close-btn-breakout { position: fixed; top: 40px; right: 40px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; z-index: 1000000; }
+        .modal-breakout-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.95);
+  z-index: 9999;
+  backdrop-filter: blur(10px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  display: block;
+  box-sizing: border-box;
+}
+        .modal-fullscreen-content {
+  width: 100%;
+  max-width: 900px;
+  margin: 5vh auto;
+  position: relative;
+  padding: 40px;
+  overflow: visible !important;
+  background: #000000 !important;
+  border: 2px solid rgba(239, 68, 68, 0.8) !important;
+  box-shadow: 0 0 35px rgba(239, 68, 68, 0.4) !important;
+}
+        .close-btn-breakout { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; z-index: 1000000; }
         .close-btn-breakout:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger-dim); }
         .form-group-fullscreen { display: flex; flex-direction: column; gap: 8px; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }

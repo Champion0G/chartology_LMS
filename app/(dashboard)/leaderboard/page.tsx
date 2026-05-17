@@ -22,9 +22,9 @@ export default async function LeaderboardPage() {
 
   return (
     <div className="fade-up">
-      <div className="page-header" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+      <div className="page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 28, width: '100%' }}>
         <Trophy size={28} style={{ color: '#f59e0b' }} />
-        <div>
+        <div style={{ textAlign: 'center' }}>
           <h1 className="page-title" style={{ margin: 0 }}>Leaderboard</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Top performers based on Level and XP</p>
         </div>

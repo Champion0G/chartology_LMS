@@ -6,7 +6,9 @@ import { BookOpen, Play, Plus, X, ExternalLink, Loader2 } from 'lucide-react'
 type Resource = {
   id: string
   title: string
-  videoUrl: string
+  videoUrl?: string | null
+  pdfUrl?: string | null
+  imageUrl?: string | null
   description: string
   createdAt: string
 }
@@ -23,19 +25,26 @@ function getYoutubeEmbed(url: string) {
   return url
 }
 
-function renderPlayer(url: string) {
-  const ytRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/
-  if (ytRegex.test(url)) {
-    return (
-      <iframe
-        src={getYoutubeEmbed(url)}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        style={{ width: '100%', height: '100%', border: 'none', borderRadius: 8 }}
-      />
-    )
+function renderPlayer(resource: Resource) {
+  if (resource.videoUrl) {
+    const ytRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/
+    if (ytRegex.test(resource.videoUrl)) {
+      return (
+        <iframe
+          src={getYoutubeEmbed(resource.videoUrl)}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ width: '100%', height: '100%', border: 'none', borderRadius: 8 }}
+        />
+      )
+    }
+    return <video src={resource.videoUrl} controls style={{ width: '100%', height: '100%', borderRadius: 8, outline: 'none', background: '#000' }} />
+  } else if (resource.pdfUrl) {
+    return <iframe src={resource.pdfUrl} style={{ width: '100%', height: '100%', border: 'none', borderRadius: 8 }} />
+  } else if (resource.imageUrl) {
+    return <img src={resource.imageUrl} alt={resource.title} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 8 }} />
   }
-  return <video src={url} controls style={{ width: '100%', height: '100%', borderRadius: 8, outline: 'none', background: '#000' }} />
+  return null
 }
 
 export default function ResourcesPage() {
@@ -91,7 +100,7 @@ export default function ResourcesPage() {
         ) : (
           <div className="resources-grid">
             {resources.map((r) => {
-              const thumb = getYoutubeThumbnail(r.videoUrl)
+              const thumb = r.videoUrl ? getYoutubeThumbnail(r.videoUrl) : r.imageUrl ? r.imageUrl : null
               return (
                 <div key={r.id} className="resource-card glass-card" onClick={() => setPlayingId(r.id)}>
                   <div className="resource-thumb" style={{ backgroundImage: thumb ? `url(${thumb})` : undefined }}>
@@ -125,7 +134,7 @@ export default function ResourcesPage() {
               </div>
             </div>
             <div className="video-container">
-              {renderPlayer(playing.videoUrl)}
+              {renderPlayer(playing)}
             </div>
             {playing.description && <p style={{ padding: '12px 0 0', fontSize: 14, color: 'var(--text-secondary)' }}>{playing.description}</p>}
           </div>
@@ -184,23 +193,29 @@ function AddResourceModal({ onClose, onAdded }: { onClose: () => void; onAdded: 
     setError('')
     
     try {
-      let finalUrl = videoUrl
+      let finalVideoUrl = videoUrl
+      let finalPdfUrl = ''
+      let finalImageUrl = ''
 
       if (file) {
-        if (file.size > 50 * 1024 * 1024) throw new Error('Video must be less than 50MB')
+        if (file.size > 50 * 1024 * 1024) throw new Error('File must be less than 50MB')
         const fd = new FormData()
         fd.append('file', file)
         fd.append('type', 'resource')
         const upRes = await fetch('/api/upload', { method: 'POST', body: fd })
-        if (!upRes.ok) throw new Error('Video upload failed')
+        if (!upRes.ok) throw new Error('File upload failed')
         const upData = await upRes.json()
-        finalUrl = upData.url
+        
+        if (file.type.startsWith('video/')) finalVideoUrl = upData.url
+        else if (file.type.startsWith('image/')) finalImageUrl = upData.url
+        else if (file.type === 'application/pdf') finalPdfUrl = upData.url
+        else throw new Error('Unsupported file type. Please upload a Video, PDF, or Image.')
       }
 
       const res = await fetch('/api/resources', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, videoUrl: finalUrl, description }),
+        body: JSON.stringify({ title, videoUrl: finalVideoUrl || null, pdfUrl: finalPdfUrl || null, imageUrl: finalImageUrl || null, description }),
       })
       if (!res.ok) throw new Error('Failed to create resource')
       
@@ -240,14 +255,14 @@ function AddResourceModal({ onClose, onAdded }: { onClose: () => void; onAdded: 
             <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>OR</div>
 
             <div className="form-group-fullscreen">
-               <label className="label">Upload Video directly (max 50MB)</label>
+               <label className="label">Upload File directly (max 50MB) - Video, PDF, Image</label>
                <div 
                  className={`upload-zone ${videoUrl ? 'disabled' : ''}`}
                  onClick={() => { if (!videoUrl) document.getElementById('res-video-upload')?.click() }}
                >
                  <Play size={32} style={{ opacity: 0.5, marginBottom: 12 }} />
-                 <div style={{ fontSize: 15, fontWeight: 500 }}>{file ? file.name : 'Click to select a video file'}</div>
-                 <input id="res-video-upload" type="file" accept="video/*" style={{ display: 'none' }} onChange={e => {if (e.target.files?.[0]) {setFile(e.target.files[0]); setVideoUrl('');}}} />
+                 <div style={{ fontSize: 15, fontWeight: 500 }}>{file ? file.name : 'Click to select a file'}</div>
+                 <input id="res-video-upload" type="file" accept="video/*,application/pdf,image/*" style={{ display: 'none' }} onChange={e => {if (e.target.files?.[0]) {setFile(e.target.files[0]); setVideoUrl('');}}} />
                </div>
             </div>
 

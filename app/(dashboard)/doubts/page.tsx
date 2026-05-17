@@ -23,6 +23,10 @@ export default function DoubtsPage() {
   const [reply, setReply] = useState('')
   const [replying, setReplying] = useState(false)
 
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [studentFilter, setStudentFilter] = useState('')
+
   const load = useCallback(async () => {
     const [dRes, mRes] = await Promise.all([fetch('/api/doubts'), fetch('/api/me')])
     const [d, m] = await Promise.all([dRes.json(), mRes.json()])
@@ -69,8 +73,17 @@ export default function DoubtsPage() {
     )
   }
 
-  const open = doubts.filter(d => d.status === 'OPEN')
-  const resolved = doubts.filter(d => d.status === 'RESOLVED')
+  const filteredDoubts = doubts.filter(d => {
+    let match = true
+    if (studentFilter && (!d.student || !d.student.name.toLowerCase().includes(studentFilter.toLowerCase()))) match = false
+    if (startDate && new Date(d.createdAt) < new Date(startDate)) match = false
+    if (endDate && new Date(d.createdAt) > new Date(endDate + 'T23:59:59')) match = false
+    return match
+  })
+
+  const openCount = doubts.filter(d => d.status === 'OPEN').length
+  const closedCount = doubts.filter(d => d.status === 'RESOLVED').length
+  const totalCount = doubts.length
 
   return (
     <div className="fade-up">
@@ -79,8 +92,8 @@ export default function DoubtsPage() {
           <h1 className="page-title">Doubts</h1>
           <p className="page-sub">
             {role === 'STUDENT'
-              ? `${open.length} open · ${resolved.length} resolved`
-              : `${open.length} awaiting reply`}
+              ? `${openCount} open · ${closedCount} resolved`
+              : `${openCount} awaiting reply`}
           </p>
         </div>
         {role === 'STUDENT' && (
@@ -89,6 +102,32 @@ export default function DoubtsPage() {
           </button>
         )}
       </div>
+
+      {(role === 'TEACHER' || role === 'ADMIN') && (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+            <div className="glass-card stat-card" style={{ padding: '16px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Doubts</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{totalCount}</div>
+            </div>
+            <div className="glass-card stat-card" style={{ padding: '16px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--warning)', textTransform: 'uppercase' }}>Open Doubts</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{openCount}</div>
+            </div>
+            <div className="glass-card stat-card" style={{ padding: '16px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--success)', textTransform: 'uppercase' }}>Closed Doubts</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{closedCount}</div>
+            </div>
+          </div>
+          
+          <div className="glass-card filter-bar" style={{ marginBottom: '24px', padding: '16px', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <input type="text" placeholder="Filter by student name..." className="input" value={studentFilter} onChange={e => setStudentFilter(e.target.value)} style={{ flex: 1, minWidth: '200px' }} />
+            <input type="date" className="input" value={startDate} onChange={e => setStartDate(e.target.value)} style={{ width: '150px' }} />
+            <span style={{ color: 'var(--text-muted)' }}>to</span>
+            <input type="date" className="input" value={endDate} onChange={e => setEndDate(e.target.value)} style={{ width: '150px' }} />
+          </div>
+        </>
+      )}
 
       {/* Ask Modal */}
       {showAsk && (
@@ -120,14 +159,14 @@ export default function DoubtsPage() {
         </div>
       )}
 
-      {doubts.length === 0 ? (
+      {filteredDoubts.length === 0 ? (
         <div className="empty-state glass-card">
           <MessageCircle size={32} style={{ opacity: 0.3 }} />
-          <p>{role === 'STUDENT' ? 'No doubts yet. Ask your first question!' : 'No doubts submitted yet.'}</p>
+          <p>{role === 'STUDENT' ? 'No doubts yet. Ask your first question!' : 'No doubts match the given filters.'}</p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {doubts.map((d) => (
+          {filteredDoubts.map((d) => (
             <div key={d.id} className="glass-card doubt-card">
               <div className="doubt-header">
                 {d.student && (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Loader2, Calendar, Clock, FileText, AlignLeft } from 'lucide-react'
 
 type Props = { onClose: () => void; onCreated: () => void }
@@ -12,6 +12,18 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
   const [durationMinutes, setDurationMinutes] = useState(60)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Lock body and html scroll when modal is open
+  useEffect(() => {
+    const originalBody = document.body.style.overflow
+    const originalHtml = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => { 
+      document.body.style.overflow = originalBody
+      document.documentElement.style.overflow = originalHtml
+    }
+  }, [])
 
   // Set the minimum datetime to now (local)
   const nowLocal = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -44,20 +56,84 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
     }
   }
 
+  async function handleInstantMeeting() {
+    setError('')
+    setLoading(true)
+
+    // Set start time to right now
+    const nowISO = new Date().toISOString()
+    const currentTitle = title.trim()
+      ? title
+      : `Instant Meeting - ${new Date().toLocaleTimeString()}`
+
+    try {
+      const res = await fetch('/api/live-classes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: currentTitle,
+          description,
+          startTime: nowISO,
+          durationMinutes,
+        }),
+      })
+
+      if (!res.ok) {
+        const { error } = await res.json()
+        setError(error || 'Something went wrong')
+        return
+      }
+
+      onCreated()
+    } catch {
+      setError('Failed to start instant meeting. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div className="modal-breakout-overlay">
-      <div className="modal-fullscreen-content">
-        <div className="modal-fullscreen-wrapper">
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(0,0,0,0.95)', /* Made the background overlay darker */
+        zIndex: 9999,
+        backdropFilter: 'blur(10px)', /* Increased blur for stronger effect */
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        padding: '16px',
+        display: 'block',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        className="glass-card"
+        style={{
+          width: '100%',
+          maxWidth: '650px',
+          margin: '5vh auto',
+          padding: '40px',
+          position: 'relative',
+          overflow: 'visible',
+          background: '#000000', /* Solid black background */
+          border: '2px solid rgba(239, 68, 68, 0.8)',
+          boxShadow: '0 0 35px rgba(239, 68, 68, 0.4)',
+        }}
+      >
+        <div className="modal-content-wrapper">
 
           {/* Header */}
-          <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 48 }}>
+          <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
             <div>
-              <h2 className="gradient-text" style={{ fontSize: 36, fontWeight: 800 }}>Schedule Live Class</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 6 }}>
+              <h2 className="gradient-text" style={{ fontSize: 28, fontWeight: 800 }}>Schedule Live Class</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 4 }}>
                 Set up a new live session for your students
               </p>
             </div>
-            <button className="close-btn-breakout" onClick={onClose}>
+            <button className="close-btn" onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
               <X size={24} />
             </button>
           </div>
@@ -66,14 +142,15 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginBottom: 28 }}>
 
               {/* Title */}
-              <div className="lcc-field" style={{ gridColumn: '1 / -1' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, gridColumn: '1 / -1' }}>
                 <label className="label">
                   <FileText size={13} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
                   Class Title
                 </label>
                 <input
+                  type="text"
                   className="input"
-                  placeholder="e.g. Chapter 5: Advanced Options Trading"
+                  placeholder="e.g. Advanced Technical Analysis"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                   required
@@ -81,13 +158,14 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
               </div>
 
               {/* Description */}
-              <div className="lcc-field" style={{ gridColumn: '1 / -1' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, gridColumn: '1 / -1' }}>
                 <label className="label">
                   <AlignLeft size={13} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
                   Description <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span>
                 </label>
                 <textarea
-                  className="input lcc-textarea"
+                  className="input"
+                  style={{ resize: 'vertical', minHeight: '80px', fontFamily: "'Inter', sans-serif" }}
                   placeholder="What will students learn in this class?"
                   value={description}
                   onChange={e => setDescription(e.target.value)}
@@ -96,14 +174,15 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
               </div>
 
               {/* Start time */}
-              <div className="lcc-field">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label className="label">
                   <Calendar size={13} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
                   Start Date & Time
                 </label>
                 <input
                   type="datetime-local"
-                  className="input lcc-datetime"
+                  className="input"
+                  style={{ colorScheme: 'dark' }}
                   min={nowLocal}
                   value={startTime}
                   onChange={e => setStartTime(e.target.value)}
@@ -112,7 +191,7 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
               </div>
 
               {/* Duration */}
-              <div className="lcc-field">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <label className="label">
                   <Clock size={13} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
                   Duration
@@ -142,36 +221,22 @@ export default function CreateClassModal({ onClose, onCreated }: Props) {
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: 14, justifyContent: 'flex-end' }}>
-              <button type="button" className="btn-secondary" style={{ padding: '13px 28px' }} onClick={onClose}>
+            <div style={{ display: 'flex', gap: 14, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+              <button type="button" className="btn-secondary" style={{ padding: '10px 20px' }} onClick={onClose}>
                 Cancel
               </button>
-              <button type="submit" className="btn-primary" style={{ padding: '13px 32px', display: 'flex', alignItems: 'center', gap: 8 }} disabled={loading}>
-                {loading ? <Loader2 size={18} className="lcc-spin" /> : null}
+              <button type="button" className="btn-secondary" style={{ padding: '10px 20px', borderColor: 'var(--accent-purple)', color: 'var(--accent-purple)' }} onClick={handleInstantMeeting} disabled={loading}>
+                {loading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite', marginRight: 6 }} /> : null}
+                Start Instant Meeting
+              </button>
+              <button type="submit" className="btn-primary" style={{ padding: '10px 24px', display: 'flex', alignItems: 'center', gap: 8 }} disabled={loading}>
+                {loading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : null}
                 {loading ? 'Scheduling...' : 'Schedule Class'}
               </button>
             </div>
           </form>
         </div>
       </div>
-
-      <style jsx>{`
-        .modal-breakout-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-primary); z-index: 999999; overflow-y: auto; display: flex; align-items: center; justify-content: center; padding: 40px; }
-        .modal-fullscreen-content { width: 100%; max-width: 780px; }
-        .modal-fullscreen-wrapper { padding: 0; }
-        .close-btn-breakout { position: fixed; top: 40px; right: 40px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; display: flex; z-index: 1000000; }
-        .close-btn-breakout:hover { background: rgba(239,68,68,0.1); color: var(--danger); border-color: var(--danger-dim); }
-        .lcc-field { display: flex; flex-direction: column; gap: 8px; }
-        .lcc-textarea { resize: vertical; min-height: 80px; font-family: 'Inter', sans-serif; }
-        .lcc-datetime { color-scheme: dark; }
-        .lcc-spin { animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @media (max-width: 640px) {
-          .modal-breakout-overlay { padding: 20px; align-items: flex-start; }
-          .close-btn-breakout { top: 20px; right: 20px; }
-          form > div:first-child { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Shield, Plus, X, Users } from 'lucide-react'
+import { Shield, Plus, X, Users, Trash2 } from 'lucide-react'
 
 type User = {
   id: string
@@ -29,6 +29,21 @@ export default function AdminPage() {
   }, [])
 
   useEffect(() => { load() }, [load])
+
+  async function deleteUser(id: string, name: string) {
+    if (!window.confirm(`Are you sure you want to delete ${name}? This action cannot be undone.`)) return
+    try {
+      const res = await fetch(`/api/admin/users?id=${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const d = await res.json()
+        alert(d.error || 'Failed to delete user')
+        return
+      }
+      load()
+    } catch (e) {
+      alert('Error deleting user')
+    }
+  }
 
   if (loading) {
     return (
@@ -95,6 +110,7 @@ export default function AdminPage() {
                   <th>Role</th>
                   <th>Level / XP</th>
                   <th>Joined</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -121,6 +137,11 @@ export default function AdminPage() {
                     </td>
                     <td className="date-cell">
                       {new Date(u.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td>
+                      <button className="btn-danger-dim" style={{ padding: '6px 10px' }} onClick={() => deleteUser(u.id, u.name)} title="Delete user">
+                        <Trash2 size={14} />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -154,6 +175,11 @@ export default function AdminPage() {
                   <span className="stat-label">Joined</span>
                   <span className="stat-value">{new Date(u.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 </div>
+              </div>
+              <div style={{ marginTop: 12, borderTop: '1px solid var(--border)', paddingTop: 12, display: 'flex', justifyContent: 'flex-end' }}>
+                <button className="btn-danger-dim" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', fontSize: 12 }} onClick={() => deleteUser(u.id, u.name)}>
+                  <Trash2 size={13} /> Delete
+                </button>
               </div>
             </div>
           ))}

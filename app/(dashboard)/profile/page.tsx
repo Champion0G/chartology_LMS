@@ -5,6 +5,7 @@ import { calculateLevel } from '@/lib/xp'
 import { Star, FileText, TrendingUp } from 'lucide-react'
 import type { Metadata } from 'next'
 import DpUploader from './DpUploader'
+import EditProfileForm from './EditProfileForm'
 
 export const metadata: Metadata = { title: 'Profile' }
 
@@ -48,7 +49,7 @@ export default async function ProfilePage() {
     <div className="fade-up">
       <h1 style={{ fontSize: 26, fontWeight: 700, marginBottom: 28 }}>Profile</h1>
 
-      <div className="profile-grid">
+      <div className="profile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
         {/* Left: Avatar + Info */}
         <div>
           <div className="glass-card profile-card">
@@ -61,6 +62,8 @@ export default async function ProfilePage() {
                 {user.role.toLowerCase()}
               </span>
             </div>
+
+            <EditProfileForm user={{ name: user.name, email: user.email }} />
 
             <hr className="divider" />
 

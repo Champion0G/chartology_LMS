@@ -19,13 +19,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { title, videoUrl, description } = await request.json()
-  if (!title || !videoUrl) {
-    return NextResponse.json({ error: 'Title and video URL required' }, { status: 400 })
+  const { title, videoUrl, pdfUrl, imageUrl, description } = await request.json()
+  if (!title || (!videoUrl && !pdfUrl && !imageUrl)) {
+    return NextResponse.json({ error: 'Title and at least one media URL (video/pdf/image) are required' }, { status: 400 })
   }
 
   const resource = await prisma.resource.create({
-    data: { title, videoUrl, description: description || '' },
+    data: { title, videoUrl, pdfUrl, imageUrl, description: description || '' },
   })
 
   return NextResponse.json(resource, { status: 201 })

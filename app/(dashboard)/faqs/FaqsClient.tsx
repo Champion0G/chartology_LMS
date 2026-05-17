@@ -8,6 +8,8 @@ type Faq = {
   question: string
   answer: string
   videoUrl: string | null
+  pdfUrl: string | null
+  imageUrl: string | null
   link: string | null
   teacher: { name: string }
   createdAt: string
@@ -50,7 +52,7 @@ export default function FaqsClient({ role }: { role: string }) {
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {[1,2,3].map(i => <div key={i} className="skeleton" style={{ height: 80, borderRadius: 12 }} />)}
+          {[1, 2, 3].map(i => <div key={i} className="skeleton" style={{ height: 80, borderRadius: 12 }} />)}
         </div>
       ) : faqs.length === 0 ? (
         <div className="glass-card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
@@ -63,8 +65,8 @@ export default function FaqsClient({ role }: { role: string }) {
             const isExpanded = expandedId === faq.id
             return (
               <div key={faq.id} className="glass-card faq-card" style={{ padding: 0, overflow: 'hidden', transition: 'all 0.3s' }}>
-                <div 
-                  className="faq-header" 
+                <div
+                  className="faq-header"
                   onClick={() => setExpandedId(isExpanded ? null : faq.id)}
                   style={{ padding: '20px 24px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: isExpanded ? 'rgba(255,255,255,0.02)' : 'transparent' }}
                 >
@@ -82,12 +84,22 @@ export default function FaqsClient({ role }: { role: string }) {
                     <div style={{ paddingTop: 20, fontSize: 15, lineHeight: 1.6, color: 'var(--text-secondary)', whiteSpace: 'pre-wrap' }}>
                       {faq.answer}
                     </div>
-                    
-                    {(faq.link || faq.videoUrl) && (
+
+                    {(faq.link || faq.videoUrl || faq.pdfUrl || faq.imageUrl) && (
                       <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
                         {faq.videoUrl && (
                           <a href={faq.videoUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', fontSize: 13, textDecoration: 'none' }}>
                             <Video size={16} /> Watch Video Answer
+                          </a>
+                        )}
+                        {faq.pdfUrl && (
+                          <a href={faq.pdfUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', fontSize: 13, textDecoration: 'none' }}>
+                            <ExternalLink size={16} /> View PDF
+                          </a>
+                        )}
+                        {faq.imageUrl && (
+                          <a href={faq.imageUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', fontSize: 13, textDecoration: 'none' }}>
+                            <ExternalLink size={16} /> View Image
                           </a>
                         )}
                         {faq.link && (
@@ -115,38 +127,56 @@ function CreateFaqModal({ onClose, onCreated }: { onClose: () => void; onCreated
   const [answer, setAnswer] = useState('')
   const [link, setLink] = useState('')
   const [file, setFile] = useState<File | null>(null)
-  
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Lock body and html scroll when modal is open
+  useEffect(() => {
+    const originalBody = document.body.style.overflow
+    const originalHtml = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => { 
+      document.body.style.overflow = originalBody
+      document.documentElement.style.overflow = originalHtml
+    }
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
+
     try {
       let videoUrl = null
+      let pdfUrl = null
+      let imageUrl = null
 
       if (file) {
-        if (file.size > 50 * 1024 * 1024) throw new Error('Video must be less than 50MB')
+        if (file.size > 50 * 1024 * 1024) throw new Error('File must be less than 50MB')
         const fd = new FormData()
         fd.append('file', file)
         fd.append('type', 'faq')
-        
+
         const upRes = await fetch('/api/upload', { method: 'POST', body: fd })
-        if (!upRes.ok) throw new Error('Video upload failed')
+        if (!upRes.ok) throw new Error('File upload failed')
         const upData = await upRes.json()
-        videoUrl = upData.url
+
+        if (file.type.startsWith('video/')) videoUrl = upData.url
+        else if (file.type.startsWith('image/')) imageUrl = upData.url
+        else if (file.type === 'application/pdf') pdfUrl = upData.url
+        else throw new Error('Unsupported file type.')
       }
 
       const res = await fetch('/api/faqs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question, answer, link: link || null, videoUrl }),
+        body: JSON.stringify({ question, answer, link: link || null, videoUrl, pdfUrl, imageUrl }),
       })
 
       if (!res.ok) throw new Error('Failed to create FAQ')
-      
+
       onCreated()
       onClose()
     } catch (err: any) {
@@ -156,73 +186,92 @@ function CreateFaqModal({ onClose, onCreated }: { onClose: () => void; onCreated
   }
 
   return (
-    <div className="modal-breakout-overlay">
-      <div className="modal-fullscreen-content">
-        <div className="modal-fullscreen-wrapper">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 48 }}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(0,0,0,0.95)',
+        zIndex: 9999,
+        backdropFilter: 'blur(10px)',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        padding: '16px',
+        display: 'block',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        className="glass-card"
+        style={{
+          width: '100%',
+          maxWidth: '600px',
+          margin: '5vh auto',
+          padding: '40px',
+          position: 'relative',
+          overflow: 'visible',
+          background: '#000000',
+          border: '2px solid rgba(239, 68, 68, 0.8)',
+          boxShadow: '0 0 35px rgba(239, 68, 68, 0.4)',
+        }}
+      >
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
             <div>
-              <h2 className="gradient-text" style={{ fontSize: 36, fontWeight: 800 }}>Add FAQ</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: 15, marginTop: 4 }}>Create a new frequently asked question for your students</p>
+              <h2 className="gradient-text" style={{ fontSize: 24, fontWeight: 800 }}>Add FAQ</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 4 }}>Create a new frequently asked question</p>
             </div>
-            <button onClick={onClose} className="close-btn-breakout" title="Close"><X size={28} /></button>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={24} /></button>
           </div>
-          
+
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             {error && <div style={{ background: 'var(--danger-dim)', color: 'var(--danger)', padding: 16, borderRadius: 12, fontSize: 14 }}>{error}</div>}
-            
-            <div className="form-group-fullscreen">
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <label className="label">Question *</label>
               <input className="input" placeholder="What is a candlestick?" value={question} onChange={e => setQuestion(e.target.value)} required />
             </div>
-            
-            <div className="form-group-fullscreen">
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <label className="label">Answer *</label>
               <textarea className="input" placeholder="A candlestick is..." rows={5} value={answer} onChange={e => setAnswer(e.target.value)} required style={{ resize: 'vertical' }} />
             </div>
-            
-            <div className="form-group-fullscreen">
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <label className="label">Reference Link (Optional)</label>
               <input className="input" type="url" placeholder="https://example.com" value={link} onChange={e => setLink(e.target.value)} />
             </div>
 
-            <div className="form-group-fullscreen">
-              <label className="label">Video Answer (Optional)</label>
-              <div 
-                className="upload-zone"
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <label className="label">Upload File (Optional)</label>
+              <div
+                style={{ padding: '24px', border: '2px dashed var(--border)', borderRadius: '12px', textAlign: 'center', cursor: 'pointer', background: 'rgba(255,255,255,0.02)', transition: 'all 0.2s' }}
                 onClick={() => document.getElementById('faq-video-upload')?.click()}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--accent-purple)'
+                  e.currentTarget.style.background = 'rgba(139, 92, 246, 0.05)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)'
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.02)'
+                }}
               >
-                <Video size={32} style={{ opacity: 0.5, marginBottom: 12 }} />
-                <div style={{ fontSize: 15, fontWeight: 500 }}>{file ? file.name : 'Click to select a video file (max 50MB)'}</div>
-                <input id="faq-video-upload" type="file" accept="video/*" style={{ display: 'none' }} onChange={e => setFile(e.target.files?.[0] || null)} />
+                <Video size={24} style={{ opacity: 0.5, marginBottom: 8 }} />
+                <div style={{ fontSize: 13, fontWeight: 500 }}>{file ? file.name : 'Click to select Video, PDF, or Image (max 50MB)'}</div>
+                <input id="faq-video-upload" type="file" accept="video/*,application/pdf,image/*" style={{ display: 'none' }} onChange={e => setFile(e.target.files?.[0] || null)} />
               </div>
             </div>
-            
-            <div style={{ display: 'flex', gap: 16, justifyContent: 'flex-end', marginTop: 20 }}>
-              <button type="button" className="btn-secondary" style={{ padding: '12px 24px' }} onClick={onClose}>Cancel</button>
-              <button type="submit" className="btn-primary" style={{ padding: '12px 32px' }} disabled={loading}>
-                {loading ? <Loader2 size={20} className="spinner" /> : 'Create FAQ'}
+
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 16 }}>
+              <button type="button" className="btn-secondary" style={{ padding: '10px 20px' }} onClick={onClose}>Cancel</button>
+              <button type="submit" className="btn-primary" style={{ padding: '10px 24px' }} disabled={loading}>
+                {loading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : 'Create FAQ'}
               </button>
             </div>
           </form>
         </div>
       </div>
-
-      <style jsx>{`
-        .modal-breakout-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-primary); z-index: 999999; overflow-y: auto; overflow-x: hidden; display: flex; align-items: center; justify-content: center; padding: 40px; }
-        .modal-fullscreen-content { width: 100%; max-width: 900px; position: relative; }
-        .close-btn-breakout { position: fixed; top: 40px; right: 40px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; z-index: 1000000; }
-        .close-btn-breakout:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger-dim); }
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .upload-zone { padding: 32px; border: 2px dashed var(--border); border-radius: 16px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.2s; }
-        .upload-zone:hover { border-color: var(--accent-purple); background: rgba(139, 92, 246, 0.05); }
-        .spinner { animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        @media (max-width: 768px) {
-          .modal-breakout-overlay { padding: 20px; align-items: flex-start; }
-          .close-btn-breakout { top: 20px; right: 20px; padding: 10px; }
-        }
-      `}</style>
     </div>
   )
 }

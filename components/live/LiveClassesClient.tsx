@@ -22,6 +22,8 @@ function getStatus(cls: LiveClass): 'upcoming' | 'live' | 'ended' {
   return 'upcoming'
 }
 
+import { formatDistanceToNow } from 'date-fns'
+
 /* ── Countdown for upcoming classes ── */
 function Countdown({ target }: { target: string }) {
   const [label, setLabel] = useState('')
@@ -29,8 +31,12 @@ function Countdown({ target }: { target: string }) {
     const tick = () => {
       const diff = +new Date(target) - Date.now()
       if (diff <= 0) { setLabel('Starting soon'); return }
-      const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000)
-      setLabel(h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${s}s` : `${s}s`)
+      if (diff > 86400000) { // More than 24 hours
+        setLabel(formatDistanceToNow(new Date(target)))
+      } else {
+        const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000)
+        setLabel(h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${s}s` : `${s}s`)
+      }
     }
     tick(); const id = setInterval(tick, 1000); return () => clearInterval(id)
   }, [target])
@@ -153,21 +159,6 @@ export default function LiveClassesClient({ role, userId }: Props) {
         </section>
       )}
 
-      {/* PAST */}
-      {ended.length > 0 && (
-        <section style={{ marginBottom: 36 }}>
-          <div className="lc-label"><Clock size={13} /> Past Sessions</div>
-          <div className="lc-grid">
-            {ended.map(cls => (
-              <ClassCard key={cls.id} cls={cls} status="ended" isTeacher={isTeacher} userId={userId} role={role}
-                onJoin={() => {}} onAttendance={() => setAttendanceClassId(cls.id)}
-                onDelete={() => deleteClass(cls.id)} deleting={deletingId === cls.id}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
       {classes.length === 0 && (
         <div className="glass-card" style={{ padding:'80px 40px', textAlign:'center' }}>
           <Video size={48} style={{ margin:'0 auto 18px', opacity:0.12, display:'block' }} />
@@ -215,12 +206,12 @@ function ClassCard({ cls, status, isTeacher, userId, role, onJoin, onAttendance,
 
   const badge = {
     live:     { bg:'rgba(239,68,68,.15)',  color:'#f87171', text:'● LIVE',    border:'rgba(239,68,68,.3)' },
-    upcoming: { bg:'rgba(255,255,255,.05)', color:'#cbd5e1', text:'UPCOMING',  border:'rgba(255,255,255,.1)' },
-    ended:    { bg:'rgba(255,255,255,.05)',color:'var(--text-muted)',text:'ENDED',border:'rgba(255,255,255,.1)' },
+    upcoming: { bg:'rgba(34,197,94,.15)',  color:'#22c55e', text:'UPCOMING',  border:'rgba(34,197,94,.3)' },
+    ended:    { bg:'rgba(239,68,68,.05)',  color:'var(--danger)', text:'ENDED',border:'rgba(239,68,68,.2)' },
   }[status]
 
-  const cardBorder = status === 'live' ? 'rgba(248,113,113,.4)' : 'var(--border)'
-  const cardGlow   = status === 'live' ? 'rgba(239,68,68,.08)' : 'transparent'
+  const cardBorder = status === 'live' ? 'rgba(239, 68, 68, 0.8)' : 'var(--border)'
+  const cardGlow   = status === 'live' ? 'rgba(239, 68, 68, 0.4)' : 'transparent'
 
   return (
     <div className="glass-card lc-card" style={{ borderColor:cardBorder, boxShadow:`var(--shadow-card), 0 0 28px ${cardGlow}` }}>
@@ -263,8 +254,8 @@ function ClassCard({ cls, status, isTeacher, userId, role, onJoin, onAttendance,
       {/* Actions */}
       <div style={{ display:'flex', gap:8 }}>
         {status === 'live' && (
-          <button className="btn-primary lc-join" onClick={onJoin}>
-            <Video size={13} /> Join Now <ChevronRight size={13} />
+          <button className="btn-primary lc-join" style={{ boxShadow: '0 0 20px rgba(239, 68, 68, 0.6)', fontWeight: 800, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }} onClick={onJoin}>
+            <Video size={14} style={{ marginRight: 4 }} /> JOIN NOW <ChevronRight size={14} />
           </button>
         )}
         {status === 'upcoming' && (
@@ -291,7 +282,7 @@ function ClassCard({ cls, status, isTeacher, userId, role, onJoin, onAttendance,
 
       <style>{`
         .lc-card { padding:22px; transition:all .3s ease !important; }
-        .lc-card:hover { transform:translateY(-2px) !important; }
+        .lc-card:hover { transform:translateY(-2px) !important; box-shadow: var(--shadow-card), 0 0 40px rgba(239,68,68,0.15) !important; border-color: rgba(239,68,68,0.4) !important; }
         .lc-join { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; }
         .lc-icon { padding:9px 13px; display:flex; align-items:center; }
       `}</style>

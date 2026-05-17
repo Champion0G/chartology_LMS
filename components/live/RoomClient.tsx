@@ -299,18 +299,18 @@ export default function RoomClient({ classId, className }: Props) {
       </div>
 
       {/* body */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, overflowY: 'auto' }}>
-        <div style={{ width: '100%', maxWidth: 560 }}>
-          <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6, textAlign: 'center' }}>Ready to join?</h2>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, textAlign: 'center', marginBottom: 28 }}>Check your camera &amp; mic before entering the classroom</p>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 24, overflowY: 'auto' }}>
+        <div style={{ width: '100%', maxWidth: 560, margin: 'auto' }}>
+          <h2 style={{ color: '#ef4444', fontSize: 32, fontWeight: 800, textAlign: 'center', marginBottom: 8, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 4, textShadow: '0 0 10px rgba(239,68,68,0.8)' }}>[ SYSTEM.READY ]</h2>
+          <p style={{ color: '#ef4444', fontSize: 14, textAlign: 'center', marginBottom: 28, fontFamily: 'monospace', letterSpacing: 1 }}>// CHECKING HARDWARE INPUTS...</p>
 
           {/* Camera / mic toggles */}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 28 }}>
-            <button onClick={() => setVideoOn(v => !v)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 10, border: `1px solid ${videoOn ? 'rgba(59,130,246,0.4)' : 'rgba(239,68,68,0.3)'}`, background: videoOn ? 'rgba(59,130,246,0.1)' : 'rgba(239,68,68,0.08)', color: videoOn ? '#60a5fa' : '#f87171', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
-              📷 Camera {videoOn ? 'On' : 'Off'}
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 32 }}>
+            <button onClick={() => setVideoOn(v => !v)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '12px 28px', borderRadius: 0, border: `2px solid ${videoOn ? '#06b6d4' : '#ef4444'}`, background: 'transparent', color: videoOn ? '#06b6d4' : '#ef4444', fontWeight: 600, fontSize: 14, cursor: 'pointer', transition: 'all 0.1s', fontFamily: 'monospace', letterSpacing: 2, textTransform: 'uppercase', boxShadow: videoOn ? '0 0 15px rgba(6,182,212,0.4), inset 0 0 8px rgba(6,182,212,0.2)' : '0 0 15px rgba(239,68,68,0.4), inset 0 0 8px rgba(239,68,68,0.2)' }}>
+              {videoOn ? '[ CAM: ON ]' : '[ CAM: OFF ]'}
             </button>
-            <button onClick={() => setAudioOn(a => !a)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 10, border: `1px solid ${audioOn ? 'rgba(59,130,246,0.4)' : 'rgba(239,68,68,0.3)'}`, background: audioOn ? 'rgba(59,130,246,0.1)' : 'rgba(239,68,68,0.08)', color: audioOn ? '#60a5fa' : '#f87171', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
-              🎤 Mic {audioOn ? 'On' : 'Off'}
+            <button onClick={() => setAudioOn(a => !a)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '12px 28px', borderRadius: 0, border: `2px solid ${audioOn ? '#06b6d4' : '#ef4444'}`, background: 'transparent', color: audioOn ? '#06b6d4' : '#ef4444', fontWeight: 600, fontSize: 14, cursor: 'pointer', transition: 'all 0.1s', fontFamily: 'monospace', letterSpacing: 2, textTransform: 'uppercase', boxShadow: audioOn ? '0 0 15px rgba(6,182,212,0.4), inset 0 0 8px rgba(6,182,212,0.2)' : '0 0 15px rgba(239,68,68,0.4), inset 0 0 8px rgba(239,68,68,0.2)' }}>
+              {audioOn ? '[ MIC: ON ]' : '[ MIC: OFF ]'}
             </button>
           </div>
 
@@ -330,7 +330,7 @@ export default function RoomClient({ classId, className }: Props) {
 
   /* ── ROOM ── */
   return (
-    <div className="lkr-room-root" style={{ position: 'fixed', inset: 0, background: '#06060f', zIndex: 9999, fontFamily: 'Inter,sans-serif' }}>
+    <div className="lkr-room-root" style={{ position: 'fixed', inset: 0, background: '#000', zIndex: 9999, fontFamily: '"Courier New", Courier, monospace' }}>
       <LiveKitRoom
         token={tokenData.token}
         serverUrl={tokenData.wsUrl}
@@ -366,9 +366,127 @@ const CSS = (
     .lkr-spin { animation:spin 1s linear infinite; }
     @keyframes spin { 100% { transform:rotate(360deg); } }
     @keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
-    /* Style the LiveKit PreJoin to match dark theme */
-    .lkr-prejoin-wrap { --lk-color-primary:#ef4444; }
-    .lkr-prejoin-wrap .lk-prejoin { background:rgba(15,15,28,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:16px; }
+    /* Style the LiveKit PreJoin and Room to match red cyberpunk theme */
+    .lkr-prejoin-wrap, .lkr-room-root { 
+      --lk-color-primary: #ef4444; 
+      --lk-color-primary-hover: #dc2626;
+      --lk-color-danger: #ef4444;
+      --lk-bg: #000;
+      --lk-border: rgba(239,68,68,0.4);
+      --lk-control-bg: rgba(239,68,68,0.1);
+      --lk-control-hover-bg: rgba(239,68,68,0.2);
+      font-family: 'Courier New', Courier, monospace !important;
+    }
+    .lkr-prejoin-wrap .lk-prejoin { 
+      background: #000 !important; 
+      border: 2px solid #ef4444 !important; 
+      border-radius: 0 !important; 
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 10px rgba(239, 68, 68, 0.2) !important;
+      padding: 32px !important;
+    }
+    .lkr-prejoin-wrap .lk-button,
+    .lkr-room-root .lk-button {
+      background: transparent !important;
+      color: #fff !important;
+      border: 1px solid #ef4444 !important;
+      border-radius: 0 !important;
+      font-family: 'Courier New', Courier, monospace !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
+      padding: 8px 16px !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.2), inset 0 0 5px rgba(239, 68, 68, 0.1) !important;
+      transition: all 0.1s !important;
+    }
+    .lkr-prejoin-wrap .lk-button:hover,
+    .lkr-room-root .lk-button:hover {
+      background: rgba(239, 68, 68, 0.2) !important;
+      color: #fff !important;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4) !important;
+    }
+    .lkr-prejoin-wrap button[type="submit"] {
+      border: 2px solid #ef4444 !important;
+      font-weight: 800 !important;
+      letter-spacing: 4px !important;
+      padding: 16px 32px !important;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4), inset 0 0 8px rgba(239, 68, 68, 0.2) !important;
+      margin-top: 16px !important;
+      width: 100% !important;
+    }
+    .lkr-prejoin-wrap button[type="submit"]:hover {
+      background: #ef4444 !important;
+      color: #000 !important;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.8) !important;
+      transform: scale(1.02) !important;
+    }
+    .lkr-prejoin-wrap .lk-form-control,
+    .lkr-room-root .lk-form-control {
+      background: rgba(0,0,0,0.8) !important;
+      border: 1px solid rgba(239, 68, 68, 0.4) !important;
+      border-radius: 0 !important;
+      padding: 12px 16px !important;
+      color: #fff !important;
+      font-family: 'Courier New', Courier, monospace !important;
+      letter-spacing: 1px !important;
+      transition: all 0.1s !important;
+    }
+    .lkr-prejoin-wrap .lk-form-control:focus,
+    .lkr-room-root .lk-form-control:focus {
+      border-color: #ef4444 !important;
+      background: #000 !important;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.5), inset 0 0 5px rgba(239, 68, 68, 0.3) !important;
+      outline: none !important;
+    }
+    .lkr-prejoin-wrap .lk-device-menu,
+    .lkr-prejoin-wrap .lk-list,
+    .lkr-room-root .lk-device-menu,
+    .lkr-room-root .lk-list {
+      background: #000 !important;
+      border: 2px solid #ef4444 !important;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important;
+      border-radius: 0 !important;
+      z-index: 9999 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    .lkr-prejoin-wrap .lk-device-menu > li > .lk-button,
+    .lkr-prejoin-wrap .lk-list > li > .lk-button,
+    .lkr-prejoin-wrap .lk-device-menu > li > button,
+    .lkr-prejoin-wrap .lk-list > li > button,
+    .lkr-room-root .lk-device-menu > li > .lk-button,
+    .lkr-room-root .lk-list > li > .lk-button,
+    .lkr-room-root .lk-device-menu > li > button,
+    .lkr-room-root .lk-list > li > button {
+      background: #000 !important;
+      color: #fff !important;
+      border: none !important;
+      border-bottom: 1px solid rgba(239, 68, 68, 0.3) !important;
+      box-shadow: none !important;
+      width: 100% !important;
+      border-radius: 0 !important;
+      text-align: left !important;
+      padding: 12px 16px !important;
+    }
+    .lkr-prejoin-wrap .lk-device-menu > li > .lk-button:hover,
+    .lkr-prejoin-wrap .lk-list > li > .lk-button:hover,
+    .lkr-prejoin-wrap .lk-device-menu > li > button:hover,
+    .lkr-prejoin-wrap .lk-list > li > button:hover,
+    .lkr-room-root .lk-device-menu > li > .lk-button:hover,
+    .lkr-room-root .lk-list > li > .lk-button:hover,
+    .lkr-room-root .lk-device-menu > li > button:hover,
+    .lkr-room-root .lk-list > li > button:hover {
+      background: #ef4444 !important;
+      color: #000 !important;
+    }
+    .lkr-prejoin-wrap .lk-video-container,
+    .lkr-room-root .lk-video-container {
+      border-radius: 0 !important;
+      overflow: hidden !important;
+      border: 2px solid #ef4444 !important;
+      background: #000 !important;
+      margin-bottom: 24px !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3) !important;
+    }
     /* dvh: fullscreen Chrome changes viewport height — dvh tracks it, vh does not */
     .lkr-room-root { height: 100vh; height: 100dvh; }
     

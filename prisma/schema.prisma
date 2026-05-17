@@ -132,7 +132,9 @@ model Doubt {
 model Resource {
   id          String   @id @default(uuid())
   title       String
-  videoUrl    String
+  videoUrl    String?
+  pdfUrl      String?
+  imageUrl    String?
   description String   @default("")
   createdAt   DateTime @default(now())
 }
@@ -154,6 +156,8 @@ model Faq {
   question  String
   answer    String
   videoUrl  String?
+  pdfUrl    String?
+  imageUrl  String?
   link      String?
   createdBy String
   createdAt DateTime @default(now())

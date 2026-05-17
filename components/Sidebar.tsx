@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, FileText, MessageCircle, Folder, HelpCircle,
-  Video, PlayCircle, Trophy, User, Shield, LogOut, Menu, X,
+  Video, PlayCircle, Trophy, User, Shield, LogOut, Menu, X, Users, Activity
 } from 'lucide-react'
 
 type SidebarProps = {
@@ -26,10 +26,31 @@ const studentNav = [
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   { href: '/profile', label: 'Profile', icon: User },
 ]
-const teacherNav = studentNav
+const teacherNav = [
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/students', label: 'Students', icon: Users },
+  { href: '/assignments', label: 'Assignments', icon: FileText },
+  { href: '/doubts', label: 'Doubts', icon: MessageCircle },
+  { href: '/resources', label: 'Resources', icon: Folder },
+  { href: '/faqs', label: 'FAQs', icon: HelpCircle },
+  { href: '/live-classes', label: 'Live Classes', icon: Video },
+  { href: '/live-test', label: 'Live Quiz', icon: PlayCircle },
+  { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+  { href: '/profile', label: 'Profile', icon: User },
+]
 const adminNav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin', label: 'Admin Panel', icon: Shield },
+  { href: '/students', label: 'Students', icon: Users },
+  { href: '/teacher-tracker', label: 'Teacher Tracker', icon: Activity },
+  { href: '/assignments', label: 'Assignments', icon: FileText },
+  { href: '/doubts', label: 'Doubts', icon: MessageCircle },
+  { href: '/resources', label: 'Resources', icon: Folder },
+  { href: '/faqs', label: 'FAQs', icon: HelpCircle },
+  { href: '/live-classes', label: 'Live Classes', icon: Video },
+  { href: '/live-test', label: 'Live Quiz', icon: PlayCircle },
+  { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+  { href: '/profile', label: 'Profile', icon: User },
 ]
 
 export default function Sidebar({ user }: SidebarProps) {

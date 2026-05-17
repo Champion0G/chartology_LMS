@@ -19,14 +19,14 @@ export async function POST(request: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   if (session.role === 'STUDENT') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { question, answer, videoUrl, link } = await request.json()
+  const { question, answer, videoUrl, pdfUrl, imageUrl, link } = await request.json()
 
   if (!question || !answer) {
     return NextResponse.json({ error: 'Question and answer required' }, { status: 400 })
   }
 
   const faq = await prisma.faq.create({
-    data: { question, answer, videoUrl, link, createdBy: session.userId }
+    data: { question, answer, videoUrl, pdfUrl, imageUrl, link, createdBy: session.userId }
   })
 
   return NextResponse.json(faq, { status: 201 })

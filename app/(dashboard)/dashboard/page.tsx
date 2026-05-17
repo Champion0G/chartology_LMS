@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import { calculateLevel } from '@/lib/xp'
-import { FileText, MessageCircle, CheckCircle, Clock, TrendingUp, Star } from 'lucide-react'
+import { FileText, MessageCircle, CheckCircle, Clock, TrendingUp, Star, Users, Shield } from 'lucide-react'
 import NotificationsWidget from '@/components/NotificationsWidget'
 import type { Metadata } from 'next'
 
@@ -135,8 +135,21 @@ async function StudentDashboard({ userId }: { userId: string }) {
 }
 
 async function TeacherDashboard() {
-  const [totalStudents, pendingReviews, openDoubts, recentSubmissions] = await Promise.all([
+  const [
+    totalStudents,
+    totalTeachers,
+    totalAssignments,
+    openAssignments,
+    closedAssignments,
+    pendingReviews,
+    openDoubts,
+    recentSubmissions
+  ] = await Promise.all([
     prisma.user.count({ where: { role: 'STUDENT' } }),
+    prisma.user.count({ where: { role: 'TEACHER' } }),
+    prisma.assignment.count(),
+    prisma.assignment.count({ where: { deadline: { gt: new Date() } } }),
+    prisma.assignment.count({ where: { deadline: { lt: new Date() } } }),
     prisma.submission.count({ where: { grade: null } }),
     prisma.doubt.count({ where: { status: 'OPEN' } }),
     prisma.submission.findMany({
@@ -159,8 +172,12 @@ async function TeacherDashboard() {
         </div>
       </div>
 
-      <div className="stats-grid">
-        <StatCard icon={<FileText size={20} />} label="Total Students" value={totalStudents} color="blue" />
+      <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+        <StatCard icon={<Users size={20} />} label="Total Students" value={totalStudents} color="blue" href="/students" />
+        <StatCard icon={<Shield size={20} />} label="Total Teachers" value={totalTeachers} color="purple" href="/teacher-tracker" />
+        <StatCard icon={<FileText size={20} />} label="Total Assignments" value={totalAssignments} color="blue" href="/assignments" />
+        <StatCard icon={<Clock size={20} />} label="Open Assignments" value={openAssignments} color="warning" href="/assignments" />
+        <StatCard icon={<CheckCircle size={20} />} label="Closed Assignments" value={closedAssignments} color="success" href="/assignments" />
         <StatCard icon={<Clock size={20} />} label="Pending Reviews" value={pendingReviews} color="warning" href="/assignments" />
         <StatCard icon={<MessageCircle size={20} />} label="Open Doubts" value={openDoubts} color="purple" href="/doubts" />
       </div>
