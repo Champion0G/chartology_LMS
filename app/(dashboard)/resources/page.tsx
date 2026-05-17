@@ -128,7 +128,7 @@ export default function ResourcesPage() {
             <div className="video-modal-header">
               <h2 style={{ fontSize: 16, fontWeight: 600 }}>{playing.title}</h2>
               <div style={{ display: 'flex', gap: 8 }}>
-                <a href={playing.videoUrl} target="_blank" rel="noreferrer" className="btn-secondary" style={{ padding: '6px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <a href={playing.videoUrl || undefined} target="_blank" rel="noreferrer" className="btn-secondary" style={{ padding: '6px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
                   <ExternalLink size={13} /> Open
                 </a>
                 <button onClick={() => setPlayingId(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>

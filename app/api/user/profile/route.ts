@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/db'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 export async function PATCH(request: NextRequest) {
   const session = await getSession()
@@ -22,11 +22,11 @@ export async function PATCH(request: NextRequest) {
     if (!currentPassword) {
       return NextResponse.json({ error: 'Current password is required to set a new password' }, { status: 400 })
     }
-    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash)
+    const isMatch = await bcrypt.compare(currentPassword, user.password)
     if (!isMatch) {
       return NextResponse.json({ error: 'Incorrect current password' }, { status: 400 })
     }
-    updateData.passwordHash = await bcrypt.hash(newPassword, 10)
+    updateData.password = await bcrypt.hash(newPassword, 10)
   }
 
   try {
